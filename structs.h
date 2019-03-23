@@ -1,6 +1,6 @@
-typedef enum  {ATRIB, ADD, SUB, MUL, IF_I, PRINT, READ, GOTO_I, LABEL} OpKind;
 
-typedef enum {EMPTY, INT_CONST, STRING} ElemKind;
+typedef enum  {ATRIB, ADD, SUB, MUL, IF_I, PRINT, READ, GOTO_I, LABEL} OpKind;
+typedef enum {INT_CONST, STRING, EMPTY} ElemKind;
 
 typedef struct{
   ElemKind kind;
@@ -8,7 +8,7 @@ typedef struct{
   {
     int val;
     char* name;
-  } contents;
+  }content;
 } Elem;
 
 typedef struct{
@@ -16,12 +16,17 @@ typedef struct{
   Elem first, second, third;
 } Instr;
 
-typedef struct{
+typedef struct list{
   Instr elem;
-  struct list *next;
-} *ILIST;
+  struct list* next;
+} ILIST;
 
-Elem mkVarString(char* s);
-Elem mkVarInt(int x);
+Elem mkVar(char* s);
+Elem mkInt(int x);
+Elem empty();
 Instr mkInstr(OpKind k, Elem x, Elem y, Elem z);
 ILIST mkList(Instr head, ILIST tail);
+
+int getVal(Elem x);
+char* getName(Elem x);
+void escrever(Instr inst);
