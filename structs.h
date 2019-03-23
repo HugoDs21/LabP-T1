@@ -21,7 +21,7 @@ typedef struct{
   struct list *next;
 } *ILIST;
 
-Elem mkVar(char* s);
-Elem mkVar(int x);
+Elem mkVarString(char* s);
+Elem mkVarInt(int x);
 Instr mkInstr(OpKind k, Elem x, Elem y, Elem z);
 ILIST mkList(Instr head, ILIST tail);
