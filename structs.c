@@ -97,5 +97,22 @@ void escrever(Instr inst) {
       break;
     }
     break;
+    case MUL:
+    if (inst.second.kind == INT_CONST && inst.third.kind == INT_CONST) {
+      printf("%s = %d * %d\n", getName(inst.first), getVal(inst.second), getVal(inst.third));
+      break;
+    }
+    if (inst.second.kind == STRING && inst.third.kind == STRING) {
+      printf("%s = %s * %s\n", getName(inst.first), getName(inst.second), getName(inst.third));
+      break;
+    }
+    if (inst.second.kind == STRING && inst.third.kind == INT_CONST) {
+      printf("%s = %s * %d\n", getName(inst.first), getName(inst.second), getVal(inst.third));
+      break;
+    }
+    if (inst.second.kind == INT_CONST && inst.third.kind == STRING) {
+      printf("%s = %d * %s\n", getName(inst.first), getVal(inst.second), getName(inst.third));
+      break;
+    }
   }
 }

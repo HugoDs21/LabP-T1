@@ -16,5 +16,8 @@ int main(int argc, char const *argv[]) {
   Elem var6 = mkVar("z");
   Instr inst3 = mkInstr(SUB,var6,var4,var1);
   escrever(inst3);
+  Elem var7 = mkVar("w");
+  Instr inst4 = mkInstr(MUL,var7,var5,var4);
+  escrever(inst4);
   return 0;
 }
