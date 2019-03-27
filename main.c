@@ -3,21 +3,19 @@
 #include <stdlib.h>
 #include <string.h>
 
+//./main file.txt
 int main(int argc, char const *argv[]) {
-  Elem var1 = mkVar("x");
-  Elem var2 = mkInt(1);
-  Elem var3 = empty();
-  Instr inst1 = mkInstr(ATRIB,var1,var2,var3);
-  escrever(inst1);
-  Elem var4 = mkVar("y");
-  Elem var5 = mkInt(2);
-  Instr inst2 = mkInstr(ADD,var4,var1,var5);
-  escrever(inst2);
-  Elem var6 = mkVar("z");
-  Instr inst3 = mkInstr(SUB,var6,var4,var1);
-  escrever(inst3);
-  Elem var7 = mkVar("w");
-  Instr inst4 = mkInstr(MUL,var7,var5,var4);
-  escrever(inst4);
+  FILE *fp;
+  fp = fopen(argv[1], "r");
+  if (fp == NULL) {
+    printf("FILE ERROR\n");
+    return 0;
+  }
+  char* buffer = NULL;
+  size_t buffsize = 32;
+  size_t aux;
+  aux = getline(&buffer, &buffsize, fp);
+  removeSpaces(buffer);
+  printf("%s", buffer);
   return 0;
 }

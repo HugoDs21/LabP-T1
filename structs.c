@@ -32,23 +32,95 @@ Instr mkInstr(OpKind oper, Elem x, Elem y, Elem z){
   return new;
 }
 
-ILIST newList(Instr head, ILIST* head_l){
-  ILIST new;
-  new.elem = head;
-  new.next = head_l;
-  return new;
+ILIST mkList(Instr n, ILIST l1) {
+   ILIST l = malloc(sizeof(struct list));
+   l->head = n;
+   l->tail = l1;
+   return l;
 }
+
+//-----------------Getters-------------------------
+
+Instr head(ILIST l) {
+   return l->head;
+}
+
+ILIST tail(ILIST l) {
+   return l->tail;
+}
+
 
 int getVal(Elem x){
   if (x.kind == INT_CONST) {
     return x.content.val;
   }
+  return 0;
 }
 
 char* getName(Elem x){
   if (x.kind == STRING) {
     return x.content.name;
   }
+  return NULL;
+}
+
+//-----------Hash Funcs---------------------------
+
+unsigned int hash(char* str){
+  unsigned int h;
+  unsigned char *p;
+  h = 0;
+  for(p = (unsigned char*)str; *p != '\0'; p++){
+    h = MULTIPLIER * h + *p;
+  }
+  return h % HASH_SIZE;
+}
+
+void init(){
+  for(int i = 0; i < HASH_SIZE; i++){
+    table[i] = NULL;
+  }
+}
+
+void display() {
+  int i = 0;
+  for(i = 0; i < HASH_SIZE; i++){
+    if (table[i] != NULL) {
+      printf("[%s, %d]\n", table[i]->key, table[i]->value);
+    }
+  }
+}
+
+List* lookup(char* k){
+    int index = hash(k);
+    while (table[index] != NULL) {
+      if(table[index]->key == k){
+        return table[index];
+      }
+      index++;
+      index %= HASH_SIZE;
+    }
+    return NULL;
+}
+
+void insert(char* k, int val){
+  int index;
+  List* new = (List*)malloc(sizeof(struct List));
+  index = hash(k);
+  new->key = k;
+  new->value = val;
+  new->next = table[index];
+  table[index] = new;
+}
+
+//-------------PRINTLIST------------------
+
+void printList(ILIST l) {
+  while (l != NULL) {
+    escrever(head(l));
+    l = l->tail;
+  }
+  printf("\n");
 }
 
 void escrever(Instr inst) {
@@ -115,4 +187,16 @@ void escrever(Instr inst) {
       break;
     }
   }
+}
+
+void removeSpaces(char* source){
+  char* i = source;
+  char* j = source;
+  while(*j != 0)
+  {
+    *i = *j++;
+    if(*i != ' ')
+      i++;
+  }
+  *i = 0;
 }
