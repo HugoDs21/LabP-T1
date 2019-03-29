@@ -44,24 +44,24 @@ int main(int argc, char const *argv[]) {
   // return 0;
 
   //TESTE parseInstr
-  char* s = "x=2+22;";
-  int var1, var2;
-  sscanf( s, "x=%d+%d", &var1, &var2 );
-  printf("%d\n", var1);
-  printf("%d\n", var2);
-  // Instr plswork = parseInstr(s);
-  // escrever(plswork);
-  // char* s = "x=22+11;";
+  char* s = "x=a*2;";
+  Instr plswork = parseInstr(s);
+  escrever(plswork);
+  // int v1, v2;
+  // char* c;
+  // // char c;
+  // sscanf( s, "%c=%d+%d", &c, &v1, &v2 );
+  // printf("%s %d %d\n", c, v1, v2);
+  // printf("%d\n", var1);
+  // printf("%d\n", var2);
+  // char* a = "x=22+11;";
   // char* aux = malloc(sizeof(char));
-  // strcpy(aux,s);
+  // strcpy(aux,a);
   // aux = strtok(aux, "=");
   // printf("%s\n", aux);
   // aux = strtok(NULL, "+");
   // printf("%s\n", aux);
   // aux = strtok(NULL, ";");
-  // printf("%s\n", aux);
-  // while (aux != NULL) {
-  //   printf("%s\n", aux);
-  //   aux = strtok(NULL, "-");
-  // }
+  // // printf("%s\n", aux);
+  return 0;
 }

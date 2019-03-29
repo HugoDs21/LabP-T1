@@ -35,10 +35,10 @@ Instr mkInstr(OpKind oper, Elem x, Elem y, Elem z){
 //--------------List-----------------------
 
 ILIST mkList(Instr n, ILIST l1) {
-   ILIST l = malloc(sizeof(struct list));
-   l->head = n;
-   l->tail = l1;
-   return l;
+  ILIST l = malloc(sizeof(struct list));
+  l->head = n;
+  l->tail = l1;
+  return l;
 }
 
 ILIST append(ILIST l1, ILIST l2){
@@ -53,8 +53,8 @@ ILIST append(ILIST l1, ILIST l2){
 
 ILIST addLast(Instr n, ILIST l1){
   ILIST l2 = mkList(n,NULL);
-	ILIST new = append(l1,l2);
-	return new;
+  ILIST new = append(l1,l2);
+  return new;
 }
 
 void printList(ILIST l) {
@@ -67,11 +67,11 @@ void printList(ILIST l) {
 //-----------------Getters-------------------------
 
 Instr head(ILIST l) {
-   return l->head;
+  return l->head;
 }
 
 ILIST tail(ILIST l) {
-   return l->tail;
+  return l->tail;
 }
 
 
@@ -117,15 +117,15 @@ void display() {
 }
 
 List* lookup(char* s){
-    int index = hash(s);
-    while (table[index] != NULL) {
-      if (table[index]->key == s) {
-        return table[index];
-      }
-      index++;
-      index %= HASH_SIZE;
+  int index = hash(s);
+  while (table[index] != NULL) {
+    if (table[index]->key == s) {
+      return table[index];
     }
-    return NULL;
+    index++;
+    index %= HASH_SIZE;
+  }
+  return NULL;
 }
 
 void insert(char* k, int val){
@@ -214,8 +214,8 @@ void escrever(Instr inst) {
     }
     break;
     case READ:
-      printf("Ler(%s)\n", getName(inst.first));
-      break;
+    printf("Ler(%s)\n", getName(inst.first));
+    break;
   }
 }
 
@@ -226,9 +226,58 @@ void removeSpaces(char* source){
   {
     *i = *j++;
     if(*i != ' ')
-      i++;
+    i++;
   }
   *i = 0;
+}
+
+int getType(char* str, char* ch){
+  //TIPOS
+  //Tipo 1 = str str
+  //Tipo 2 = int int
+  //Tipo 3 = str int
+  //Tipo 4 = int str
+  char *token, *string, *tofree,*var1, *var2, *dup1, *dup2;
+  int tmp1,tmp2, tipo;
+  tofree = string = strdup(str);
+  if (string == NULL)
+  return -1;
+
+  token = strsep(&string, "=");
+  token = strsep(&string, "=");
+  token[strlen(token)-1]='\0'; // remove ";"
+  dup1 = strdup(token);
+  dup2 = strdup(token);
+
+  var1 = strsep(&dup1, ch);
+  if((var1[0] >= 0x60 && var1[0] <= 0x7B)) // detect string
+  {
+    var1 = strsep(&dup1, ch);
+    if((var1[0] >= 0x61 && var1[0] <= 0x7A)){
+      tipo = 1;
+      return tipo;
+    }
+    else {
+      tmp2 = atoi(var1);
+      tipo = 3;
+      return tipo;
+    }
+  }
+
+  var2 = strsep(&dup2, ch);
+  if(!(var2[0] >= 0x60 && var2[0] <= 0x7B)){
+    tmp1 = atoi(var2);
+    var2 = strsep(&dup2, ch);
+    if(!(var2[0] >= 0x61 && var2[0] <= 0x7A)){
+      tmp2 = atoi(var2);
+      tipo = 2;
+      return tipo;
+    }
+    else {
+      tipo = 4;
+      return tipo;
+    }
+  }
 }
 
 Instr parseInstr(char* s){
@@ -240,29 +289,186 @@ Instr parseInstr(char* s){
     i = mkInstr(READ, mkVar(aux), empty(), empty());
     return i;
   }
-  //ATRIB
-  if(strlen(s) <= 4){
-    *aux = *(s+0);
-    Elem var = mkVar(aux);
-    *aux = *(s+2);
-    Elem val = mkInt(atoi(aux));
-    i = mkInstr(ATRIB,var,val,empty());
+  //CONTAS
+  if(strstr(s, "+") != NULL){ //ADD
+    int t = getType(s, "+");
+    char *token, *string, *var;
+    switch (t) {
+      case 1:
+      string = strdup(s);
+      token = strsep(&string, "=");
+      Elem v1 = mkVar(token);
+      token = strsep(&string, "=");
+      token[strlen(token)-1] = '\0';
+      var = strsep(&token, "+");
+      Elem s11 = mkVar(var);
+      var = strsep(&token, "+");
+      Elem s21 = mkVar(var);
+      i = mkInstr(ADD,v1,s11,s21);
+      return i;
+      break;
+      case 2:
+      string = strdup(s);
+      token = strsep(&string, "=");
+      Elem v2 = mkVar(token);
+      token = strsep(&string, "=");
+      token[strlen(token)-1] = '\0';
+      var = strsep(&token, "+");
+      Elem s12 = mkInt(atoi(var));
+      var = strsep(&token, "+");
+      Elem s22 = mkInt(atoi(var));
+      i = mkInstr(ADD,v2,s12,s22);
+      return i;
+      break;
+      case 3:
+      string = strdup(s);
+      token = strsep(&string, "=");
+      Elem v3 = mkVar(token);
+      token = strsep(&string, "=");
+      token[strlen(token)-1] = '\0';
+      var = strsep(&token, "+");
+      Elem s13 = mkVar(var);
+      var = strsep(&token, "+");
+      Elem s23 = mkInt(atoi(var));
+      i = mkInstr(ADD,v3,s13,s23);
+      return i;
+      break;
+      case 4:
+      string = strdup(s);
+      token = strsep(&string, "=");
+      Elem v4 = mkVar(token);
+      token = strsep(&string, "=");
+      token[strlen(token)-1] = '\0';
+      var = strsep(&token, "+");
+      Elem s14 = mkInt(atoi(var));
+      var = strsep(&token, "+");
+      Elem s24 = mkVar(var);
+      i = mkInstr(ADD,v4,s14,s24);
+      return i;
+      break;
+    }
     return i;
   }
-  //Contas
-  if (strlen(s) <= 6) {
-    switch (*(s+3)) {
-      case '+':
-        strcpy(aux,s);
-        aux = strtok(aux, "=");
-        Elem var = mkVar(aux);
-        aux = strtok(NULL, "+");
-        Elem val1 = mkInt(atoi(aux));
-        aux = strtok(NULL, ";");
-        Elem val2 = mkInt(atoi(aux));
-        i = mkInstr(ADD,var,val1,val2);
-        return i;
+
+  if(strstr(s, "-") != NULL){ //SUB
+    int t = getType(s, "-");
+    char *token, *string, *var;
+    switch (t) {
+      case 1:
+      string = strdup(s);
+      token = strsep(&string, "=");
+      Elem v1 = mkVar(token);
+      token = strsep(&string, "=");
+      token[strlen(token)-1] = '\0';
+      var = strsep(&token, "-");
+      Elem s11 = mkVar(var);
+      var = strsep(&token, "-");
+      Elem s21 = mkVar(var);
+      i = mkInstr(SUB,v1,s11,s21);
+      return i;
+      break;
+      case 2:
+      string = strdup(s);
+      token = strsep(&string, "=");
+      Elem v2 = mkVar(token);
+      token = strsep(&string, "=");
+      token[strlen(token)-1] = '\0';
+      var = strsep(&token, "-");
+      Elem s12 = mkInt(atoi(var));
+      var = strsep(&token, "-");
+      Elem s22 = mkInt(atoi(var));
+      i = mkInstr(SUB,v2,s12,s22);
+      return i;
+      break;
+      case 3:
+      string = strdup(s);
+      token = strsep(&string, "=");
+      Elem v3 = mkVar(token);
+      token = strsep(&string, "=");
+      token[strlen(token)-1] = '\0';
+      var = strsep(&token, "-");
+      Elem s13 = mkVar(var);
+      var = strsep(&token, "-");
+      Elem s23 = mkInt(atoi(var));
+      i = mkInstr(SUB,v3,s13,s23);
+      return i;
+      break;
+      case 4:
+      string = strdup(s);
+      token = strsep(&string, "=");
+      Elem v4 = mkVar(token);
+      token = strsep(&string, "=");
+      token[strlen(token)-1] = '\0';
+      var = strsep(&token, "-");
+      Elem s14 = mkInt(atoi(var));
+      var = strsep(&token, "-");
+      Elem s24 = mkVar(var);
+      i = mkInstr(SUB,v4,s14,s24);
+      return i;
+      break;
     }
+    return i;
   }
+
+  if(strstr(s, "*") != NULL){ //MUL
+    int t = getType(s, "*");
+    char *token, *string, *var;
+    switch (t) {
+      case 1:
+      string = strdup(s);
+      token = strsep(&string, "=");
+      Elem v1 = mkVar(token);
+      token = strsep(&string, "=");
+      token[strlen(token)-1] = '\0';
+      var = strsep(&token, "*");
+      Elem s11 = mkVar(var);
+      var = strsep(&token, "*");
+      Elem s21 = mkVar(var);
+      i = mkInstr(MUL,v1,s11,s21);
+      return i;
+      break;
+      case 2:
+      string = strdup(s);
+      token = strsep(&string, "=");
+      Elem v2 = mkVar(token);
+      token = strsep(&string, "=");
+      token[strlen(token)-1] = '\0';
+      var = strsep(&token, "*");
+      Elem s12 = mkInt(atoi(var));
+      var = strsep(&token, "*");
+      Elem s22 = mkInt(atoi(var));
+      i = mkInstr(MUL,v2,s12,s22);
+      return i;
+      break;
+      case 3:
+      string = strdup(s);
+      token = strsep(&string, "=");
+      Elem v3 = mkVar(token);
+      token = strsep(&string, "=");
+      token[strlen(token)-1] = '\0';
+      var = strsep(&token, "*");
+      Elem s13 = mkVar(var);
+      var = strsep(&token, "*");
+      Elem s23 = mkInt(atoi(var));
+      i = mkInstr(MUL,v3,s13,s23);
+      return i;
+      break;
+      case 4:
+      string = strdup(s);
+      token = strsep(&string, "=");
+      Elem v4 = mkVar(token);
+      token = strsep(&string, "=");
+      token[strlen(token)-1] = '\0';
+      var = strsep(&token, "*");
+      Elem s14 = mkInt(atoi(var));
+      var = strsep(&token, "+");
+      Elem s24 = mkVar(var);
+      i = mkInstr(MUL,v4,s14,s24);
+      return i;
+      break;
+    }
+    return i;
+  }
+
   return i;
 }
