@@ -44,7 +44,7 @@ int main(int argc, char const *argv[]) {
   // return 0;
 
   //TESTE parseInstr
-  char* s = "x=a*2;";
+  char* s = "ler(k);";
   Instr plswork = parseInstr(s);
   escrever(plswork);
   // int v1, v2;

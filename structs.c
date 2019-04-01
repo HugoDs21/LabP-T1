@@ -237,9 +237,9 @@ int getType(char* str, char* ch){
   //Tipo 2 = int int
   //Tipo 3 = str int
   //Tipo 4 = int str
-  char *token, *string, *tofree,*var1, *var2, *dup1, *dup2;
+  char *token, *string, *var1, *var2, *dup1, *dup2;
   int tmp1,tmp2, tipo;
-  tofree = string = strdup(str);
+  string = strdup(str);
   if (string == NULL)
   return -1;
 
@@ -282,11 +282,13 @@ int getType(char* str, char* ch){
 
 Instr parseInstr(char* s){
   Instr i;
-  char* aux = malloc(sizeof(char));
   //READ ler(k)
   if (strstr(s, "ler") != NULL) {
-    *aux = *(s+4);
-    i = mkInstr(READ, mkVar(aux), empty(), empty());
+    char* string = strdup(s);
+    char* aux = strsep(&string, "(");
+    aux = strsep(&string, ")");
+    Elem ch = mkVar(aux);
+    i = mkInstr(READ,ch,empty(),empty());
     return i;
   }
   //CONTAS
