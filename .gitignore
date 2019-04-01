@@ -50,3 +50,6 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+compiling_error.txt
+.vscode/ipch/5ab6a74b503d196e/mmap_address.bin
+.vscode/launch.json
