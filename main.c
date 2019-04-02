@@ -6,32 +6,38 @@
 //./main file.txt
 int main(int argc, char const *argv[]) {
   init_table();
-  // char* buffer = NULL;
-  // size_t buffsize = 32;
-  // ssize_t aux;
-  //
-  // // FILE *fp;
-  // // fp = fopen(argv[1], "r");
-  // // if (fp == NULL) {
-  // //   printf("FILE ERROR\n");
-  // //   return 0;
-  // // }
-  // //
-  // // while ((aux = getline(&buffer, &buffsize, fp)) != -1) {
-  // //   removeSpaces(buffer);
-  // //   printf("Line Lenth %zu: \n", aux-1); //aux - 1 para nao contar com o \n
-  // //   printf("%s", buffer);
-  // // }
-  // //
-  // // fclose(fp);
+  char* buffer = NULL;
+  size_t buffsize = 32;
+  ssize_t aux;
+
+  FILE *fp;
+  fp = fopen(argv[1], "r");
+  if (fp == NULL) {
+    printf("FILE ERROR\n");
+    return 0;
+  }
+  ILIST lista = mkList(mkInstr(START,empty(),empty(),empty()),NULL);
+  while ((aux = getline(&buffer, &buffsize, fp)) != -1) {
+    removeSpaces(buffer);
+    //printf("Line Lenth %zu: \n", aux-1); //aux - 1 para nao contar com o \n
+    printf("Original = %s", buffer);
+    Instr plswork = parseInstr(buffer);
+    ILIST a = mkList(plswork, NULL);
+    lista = append(lista, a);
+  }
+
+  fclose(fp);
+  printf("Lista \n");
+  printList(lista);
 
   //TESTE LISTAS
-  // Instr i = mkInstr(ADD,mkVar("x"),mkInt(2),mkInt(3));
-  // ILIST l = mkList(i,NULL);
-  // printList(l);
-  // Instr x = mkInstr(ATRIB,mkVar("y"),mkInt(3),empty());
-  // ILIST l2 = addLast(x,l);
-  // printList(l2);
+  // ILIST lista = mkList(mkInstr(START,empty(),empty(),empty()), NULL);
+  // char* s = "ler(k);";
+  // Instr i = parseInstr(s);
+  // //escrever(i);
+  // ILIST aux = mkList(i, NULL);
+  // lista = append(lista,aux);
+  // printList(lista);
 
   // //TESTE HASH
   // insert("x",2);
@@ -44,9 +50,9 @@ int main(int argc, char const *argv[]) {
   // return 0;
 
   //TESTE parseInstr
-  char* s = "ler(k);";
-  Instr plswork = parseInstr(s);
-  escrever(plswork);
+  // char* s = "ler(k);";
+  // Instr plswork = parseInstr(s);
+  // escrever(plswork);
   // int v1, v2;
   // char* c;
   // // char c;

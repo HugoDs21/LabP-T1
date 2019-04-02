@@ -54,11 +54,11 @@ int getType(char* str, char* ch){
 //
 int main()
 {
-  char* s = "ler(k);";
+  char* s = "p=22222;";
   char* string = strdup(s);
-  char* token = strsep(&string, "(");
+  char* token = strsep(&string, "=");
   printf("%s\n", token);
-  token = strsep(&string, ")");
+  token = strsep(&string, ";");
   printf("%s\n", token);
   // token[strlen(token)-1]='\0';
   // char* var;

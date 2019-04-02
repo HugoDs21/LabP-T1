@@ -216,6 +216,11 @@ void escrever(Instr inst) {
     case READ:
     printf("Ler(%s)\n", getName(inst.first));
     break;
+    case PRINT:
+    printf("Escrever(%s)\n", getName(inst.first));
+    break;
+    case START:
+    break;
   }
 }
 
@@ -289,6 +294,28 @@ Instr parseInstr(char* s){
     aux = strsep(&string, ")");
     Elem ch = mkVar(aux);
     i = mkInstr(READ,ch,empty(),empty());
+    return i;
+  }
+  //PRINT escrever(p)
+  if (strstr(s, "escrever") != NULL) {
+    char* string = strdup(s);
+    char* aux = strsep(&string, "(");
+    aux = strsep(&string, ")");
+    Elem ch = mkVar(aux);
+    i = mkInstr(PRINT,ch,empty(),empty());
+    return i;
+  }
+  //ATRIB s = 2;
+  if (strstr(s, "+") == NULL &&
+      strstr(s, "-") == NULL &&
+      strstr(s, "*") == NULL &&
+      strstr(s, "/") == NULL) {
+    char* string = strdup(s);
+    char* aux = strsep(&string, "=");
+    Elem var = mkVar(aux);
+    aux = strsep(&string, ";");
+    Elem num = mkInt(atoi(aux));
+    i = mkInstr(ATRIB,var,num,empty());
     return i;
   }
   //CONTAS
@@ -471,6 +498,5 @@ Instr parseInstr(char* s){
     }
     return i;
   }
-
   return i;
 }
