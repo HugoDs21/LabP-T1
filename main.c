@@ -16,7 +16,7 @@ int main(int argc, char const *argv[]) {
   //   printf("FILE ERROR\n");
   //   return 0;
   // }
-  // ILIST lista = mkList(mkInstr(START,empty(),empty(),empty()),NULL);
+  ILIST lista = mkList(mkInstr(START,empty(),empty(),empty()),NULL);
   // while ((aux = getline(&buffer, &buffsize, fp)) != -1) {
   //   removeSpaces(buffer);
   //   //printf("Line Lenth %zu: \n", aux-1); //aux - 1 para nao contar com o \n
@@ -29,40 +29,72 @@ int main(int argc, char const *argv[]) {
   // fclose(fp);
   // printf("Lista \n");
   // printList(lista);
-  //
+  ILIST a = mkList(mkInstr(PRINT,mkVar("x"),empty(),empty()), NULL);
+  lista = append(lista, a);
+  //Percorrer Lista
+  List* l;
+  int val;
+  char* s;
+  while (lista != NULL) {
+    Instr i = head(lista);
+    switch (i.op) {
+      // case START:
+      // break;
+      // case READ:
+      // printf("Valor de %s = ", getName(i.first));
+      // scanf("%d", &val);
+      // insert(getName(i.first), val);
+      // display();
+      // break;
+      case PRINT:
+      printf("ENTREI NO PRINT\n");
+      printf("%s\n", getName(i.first));
+      l = lookup(getName(i.first));
+      printf("CONSEGUI DAR LOOKUP\n");
+      val = getHashValue(l);
+      printf("%d\n", val);
+      break;
+      // case ATRIB:
+      // insert(getName(i.first), getVal(i.second));
+      // break;
+    }
+    lista = lista->tail;
+  }
+
+
   //TESTE EXEC
-  // char* string = "p = 2 + 4;";
-  // Instr i = mkInstr(ADD,mkVar("p"), mkInt(2), mkInt(4));
+  // char* string = "escrever(k);";
+  // Instr i = parseInstr(string);
   // escrever(i);
-  // int sum = getVal(i.second) + getVal(i.third);
-  // printf("%d + %d = %d\n", getVal(i.second), getVal(i.third), sum);
-  // char* nome = getName(i.first);
-  // printf("%s\n", nome);
-  // removeSpaces(nome);
-  // printf("%s\n", nome);
-  // insert(nome,sum);
+  // insert(getName(i.first), 6);
   // display();
-  // List* n = lookup("p");
+  // List* n = lookup("k");
   // int val = getHashValue(n);
+  // printf("%d\n", val);
 
   // TESTE HASH
-  // insert("x",2);
-  // List* n = lookup("x");
+  // Instr i = mkInstr(ATRIB,mkVar("x"),mkInt(2),empty());
+  // insert(getName(i.first),2);
+  // display();
+  // List* n = lookup(getName(i.first));
   // int val = getHashValue(n);
+  // printf("%d\n", val);
   // printf("%d\n", val);
   // char* s = getHashKey(n);
   // printf("%s\n", s);
+  // //display();
+  // insert("x", 5);
   // display();
-  char* string = "p=2+5;";
-  Instr i = parseInstr(string);
-  int sum = getVal(i.second) + getVal(i.third);
-  insert(getName(i.first), sum);
-  display();
-  // List* a = lookup(getName(i.first));
-  char* s2 = getHashKey(lookup(getName(i.first)));
-  printf("%s\n", s2);
-  int v = getHashValue(lookup(getName(i.first)));
-  printf("%d\n", v);
+  // char* string = "escrever(k)";
+  // Instr i = parseInstr(string);
+  // printf("%s\n", getName(i.first));
+  // insert(getName(i.first), 2);
+  // display();
+  // // List* a = lookup(getName(i.first));
+  // char* s2 = getHashKey(lookup(getName(i.first)));
+  // printf("%s\n", s2);
+  // int v = getHashValue(lookup(getName(i.first)));
+  // printf("%d\n", v);
 
   //TESTE LISTAS
   // ILIST lista = mkList(mkInstr(START,empty(),empty(),empty()), NULL);

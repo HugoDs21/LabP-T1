@@ -1,4 +1,2 @@
 ler(k);
-s = 2;
-p = k + s;
-escrever(p);
+escrever(k);
