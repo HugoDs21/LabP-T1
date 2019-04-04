@@ -23,12 +23,13 @@ Elem empty(){
   return new;
 }
 
-Instr mkInstr(OpKind oper, Elem x, Elem y, Elem z){
+Instr mkInstr(OpKind oper, Elem x, Elem y, Elem z, int t){
   Instr new;
   new.op = oper;
   new.first = x;
   new.second = y;
   new.third = z;
+  new.tipo = t;
   return new;
 }
 
@@ -119,7 +120,7 @@ void display() {
 List* lookup(char* s){
   int index = hash(s);
   while (table[index] != NULL) {
-    if (table[index]->key == s) {
+    if (table[index]->key, s) {
       return table[index];
     }
     index++;
@@ -220,6 +221,7 @@ void escrever(Instr inst) {
     printf("Escrever(%s)\n", getName(inst.first));
     break;
     case START:
+    printf("START\n");
     break;
   }
 }
@@ -293,7 +295,7 @@ Instr parseInstr(char* s){
     char* aux = strsep(&string, "(");
     aux = strsep(&string, ")");
     Elem ch = mkVar(aux);
-    i = mkInstr(READ,ch,empty(),empty());
+    i = mkInstr(READ,ch,empty(),empty(),0);
     return i;
   }
   //PRINT escrever(p)
@@ -302,7 +304,7 @@ Instr parseInstr(char* s){
     char* aux = strsep(&string, "(");
     aux = strsep(&string, ")");
     Elem ch = mkVar(aux);
-    i = mkInstr(PRINT,ch,empty(),empty());
+    i = mkInstr(PRINT,ch,empty(),empty(),0);
     return i;
   }
   //ATRIB s = 2;
@@ -315,7 +317,7 @@ Instr parseInstr(char* s){
     Elem var = mkVar(aux);
     aux = strsep(&string, ";");
     Elem num = mkInt(atoi(aux));
-    i = mkInstr(ATRIB,var,num,empty());
+    i = mkInstr(ATRIB,var,num,empty(),0);
     return i;
   }
   //CONTAS
@@ -333,7 +335,7 @@ Instr parseInstr(char* s){
       Elem s11 = mkVar(var);
       var = strsep(&token, "+");
       Elem s21 = mkVar(var);
-      i = mkInstr(ADD,v1,s11,s21);
+      i = mkInstr(ADD,v1,s11,s21,t);
       return i;
       break;
       case 2:
@@ -346,7 +348,7 @@ Instr parseInstr(char* s){
       Elem s12 = mkInt(atoi(var));
       var = strsep(&token, "+");
       Elem s22 = mkInt(atoi(var));
-      i = mkInstr(ADD,v2,s12,s22);
+      i = mkInstr(ADD,v2,s12,s22,t);
       return i;
       break;
       case 3:
@@ -359,7 +361,7 @@ Instr parseInstr(char* s){
       Elem s13 = mkVar(var);
       var = strsep(&token, "+");
       Elem s23 = mkInt(atoi(var));
-      i = mkInstr(ADD,v3,s13,s23);
+      i = mkInstr(ADD,v3,s13,s23,t);
       return i;
       break;
       case 4:
@@ -372,7 +374,7 @@ Instr parseInstr(char* s){
       Elem s14 = mkInt(atoi(var));
       var = strsep(&token, "+");
       Elem s24 = mkVar(var);
-      i = mkInstr(ADD,v4,s14,s24);
+      i = mkInstr(ADD,v4,s14,s24,t);
       return i;
       break;
     }
@@ -393,7 +395,7 @@ Instr parseInstr(char* s){
       Elem s11 = mkVar(var);
       var = strsep(&token, "-");
       Elem s21 = mkVar(var);
-      i = mkInstr(SUB,v1,s11,s21);
+      i = mkInstr(SUB,v1,s11,s21,t);
       return i;
       break;
       case 2:
@@ -406,7 +408,7 @@ Instr parseInstr(char* s){
       Elem s12 = mkInt(atoi(var));
       var = strsep(&token, "-");
       Elem s22 = mkInt(atoi(var));
-      i = mkInstr(SUB,v2,s12,s22);
+      i = mkInstr(SUB,v2,s12,s22,t);
       return i;
       break;
       case 3:
@@ -419,7 +421,7 @@ Instr parseInstr(char* s){
       Elem s13 = mkVar(var);
       var = strsep(&token, "-");
       Elem s23 = mkInt(atoi(var));
-      i = mkInstr(SUB,v3,s13,s23);
+      i = mkInstr(SUB,v3,s13,s23,t);
       return i;
       break;
       case 4:
@@ -432,7 +434,7 @@ Instr parseInstr(char* s){
       Elem s14 = mkInt(atoi(var));
       var = strsep(&token, "-");
       Elem s24 = mkVar(var);
-      i = mkInstr(SUB,v4,s14,s24);
+      i = mkInstr(SUB,v4,s14,s24,t);
       return i;
       break;
     }
@@ -453,7 +455,7 @@ Instr parseInstr(char* s){
       Elem s11 = mkVar(var);
       var = strsep(&token, "*");
       Elem s21 = mkVar(var);
-      i = mkInstr(MUL,v1,s11,s21);
+      i = mkInstr(MUL,v1,s11,s21,t);
       return i;
       break;
       case 2:
@@ -466,7 +468,7 @@ Instr parseInstr(char* s){
       Elem s12 = mkInt(atoi(var));
       var = strsep(&token, "*");
       Elem s22 = mkInt(atoi(var));
-      i = mkInstr(MUL,v2,s12,s22);
+      i = mkInstr(MUL,v2,s12,s22,t);
       return i;
       break;
       case 3:
@@ -479,7 +481,7 @@ Instr parseInstr(char* s){
       Elem s13 = mkVar(var);
       var = strsep(&token, "*");
       Elem s23 = mkInt(atoi(var));
-      i = mkInstr(MUL,v3,s13,s23);
+      i = mkInstr(MUL,v3,s13,s23,t);
       return i;
       break;
       case 4:
@@ -492,7 +494,7 @@ Instr parseInstr(char* s){
       Elem s14 = mkInt(atoi(var));
       var = strsep(&token, "+");
       Elem s24 = mkVar(var);
-      i = mkInstr(MUL,v4,s14,s24);
+      i = mkInstr(MUL,v4,s14,s24,t);
       return i;
       break;
     }

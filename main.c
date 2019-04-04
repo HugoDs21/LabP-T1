@@ -6,61 +6,77 @@
 //./main file.txt
 int main(int argc, char const *argv[]) {
   init_table();
-  // char* buffer = NULL;
-  // size_t buffsize = 32;
-  // ssize_t aux;
-  //
-  // FILE *fp;
-  // fp = fopen(argv[1], "r");
-  // if (fp == NULL) {
-  //   printf("FILE ERROR\n");
-  //   return 0;
-  // }
-  ILIST lista = mkList(mkInstr(START,empty(),empty(),empty()),NULL);
-  // while ((aux = getline(&buffer, &buffsize, fp)) != -1) {
-  //   removeSpaces(buffer);
-  //   //printf("Line Lenth %zu: \n", aux-1); //aux - 1 para nao contar com o \n
-  //   printf("Original = %s", buffer);
-  //   Instr plswork = parseInstr(buffer);
-  //   ILIST a = mkList(plswork, NULL);
-  //   lista = append(lista, a);
-  // }
-  //
-  // fclose(fp);
-  // printf("Lista \n");
-  // printList(lista);
-  ILIST a = mkList(mkInstr(PRINT,mkVar("x"),empty(),empty()), NULL);
-  lista = append(lista, a);
+  char* buffer = NULL;
+  size_t buffsize = 32;
+  ssize_t aux;
+
+  FILE *fp;
+  fp = fopen(argv[1], "r");
+  if (fp == NULL) {
+    printf("FILE ERROR\n");
+    return 0;
+  }
+  ILIST lista = mkList(mkInstr(START,empty(),empty(),empty(),0),NULL);
+  while ((aux = getline(&buffer, &buffsize, fp)) != -1) {
+    removeSpaces(buffer);
+    //printf("Line Lenth %zu: \n", aux-1); //aux - 1 para nao contar com o \n
+    //printf("Original = %s", buffer);
+    Instr plswork = parseInstr(buffer);
+    ILIST a = mkList(plswork, NULL);
+    lista = append(lista, a);
+  }
+
+  fclose(fp);
+  //printf("Lista \n");
+  //printList(lista);
   //Percorrer Lista
-  List* l;
-  int val;
-  char* s;
+  List* li;
+  int val, a1, a2;
   while (lista != NULL) {
     Instr i = head(lista);
-    switch (i.op) {
-      // case START:
-      // break;
-      // case READ:
-      // printf("Valor de %s = ", getName(i.first));
-      // scanf("%d", &val);
-      // insert(getName(i.first), val);
-      // display();
-      // break;
+    switch(i.op){
+      case START:
+      break;
       case PRINT:
-      printf("ENTREI NO PRINT\n");
-      printf("%s\n", getName(i.first));
-      l = lookup(getName(i.first));
-      printf("CONSEGUI DAR LOOKUP\n");
-      val = getHashValue(l);
+      li = lookup(getName(i.first));
+      val = getHashValue(li);
       printf("%d\n", val);
       break;
-      // case ATRIB:
-      // insert(getName(i.first), getVal(i.second));
-      // break;
+      case READ:
+      printf("Valor de %s = ", getName(i.first));
+      scanf("%d", &val);
+      insert(getName(i.first), val);
+      break;
+      case ATRIB:
+      insert(getName(i.first), getVal(i.second));
+      break;
+      case ADD:
+      switch (i.tipo) {
+        case 2:
+        insert(getName(i.first), (getVal(i.second) + getVal(i.third)));
+        break;
+        case 1:
+        a1 = getHashValue(lookup(getName(i.second)));
+        a2 = getHashValue(lookup(getName(i.third)));
+        insert(getName(i.first), (getHashValue(lookup(getName(i.second))) + getHashValue(lookup(getName(i.third)))));
+        break;
+        case 3:
+        a1 = getHashValue(lookup(getName(i.second)));
+        insert(getName(i.first), (a1 + getVal(i.third)));
+        break;
+        case 4:
+        a2 = getHashValue(lookup(getName(i.third)));
+        insert(getName(i.first), (a2 + getVal(i.second)));
+      }
+      break;
     }
     lista = lista->tail;
   }
 
+  //Tipo 1 = str str
+  //Tipo 2 = int int
+  //Tipo 3 = str int
+  //Tipo 4 = int str
 
   //TESTE EXEC
   // char* string = "escrever(k);";
@@ -73,12 +89,24 @@ int main(int argc, char const *argv[]) {
   // printf("%d\n", val);
 
   // TESTE HASH
-  // Instr i = mkInstr(ATRIB,mkVar("x"),mkInt(2),empty());
-  // insert(getName(i.first),2);
+  // ILIST lista = mkList(mkInstr(START,empty(),empty(),empty()),NULL);
+  // Instr i = mkInstr(PRINT,mkVar("x"),empty(),empty());
+  // ILIST a = mkList(i, NULL);
+  // lista = append(lista,a);
+  // while (lista != NULL) {
+  //   Instr aux = head(lista);
+  //   escrever(aux);
+  //   if(aux.op == PRINT){
+  //     insert("ola",1);
+  //     int val = getHashValue(lookup("ola"));
+  //     printf("%d\n", val);
+  //   }
+  //   lista = lista->tail;
+  // }
+  // insert("ola", 69);
   // display();
-  // List* n = lookup(getName(i.first));
+  // List* n = lookup("ola");
   // int val = getHashValue(n);
-  // printf("%d\n", val);
   // printf("%d\n", val);
   // char* s = getHashKey(n);
   // printf("%s\n", s);

@@ -1,2 +1,6 @@
-ler(k);
+p=1;
+s=2;
+escrever(p);
+escrever(s);
+k=1+p;
 escrever(k);

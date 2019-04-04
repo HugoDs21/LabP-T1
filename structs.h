@@ -19,12 +19,13 @@ typedef struct{
 typedef struct{
   OpKind op;
   Elem first, second, third;
+  int tipo;
 } Instr;
 
 Elem mkVar(char*);
 Elem mkInt(int);
 Elem empty();
-Instr mkInstr(OpKind, Elem, Elem, Elem);
+Instr mkInstr(OpKind, Elem, Elem, Elem, int);
 int getVal(Elem );
 char* getName(Elem);
 void escrever(Instr);
