@@ -1,5 +1,8 @@
-ler(k);
-ler(x);
-p = 4;
-y=k+x;
-escrever(y);
+ler(ab);
+ler(cd);
+p = 2;
+quit;
+k = p * ab;
+f = k * cd;
+p = p * 2;
+escrever(f);

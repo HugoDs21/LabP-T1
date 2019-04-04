@@ -18,25 +18,30 @@ int main(int argc, char const *argv[]) {
   }
   ILIST lista = mkList(mkInstr(START,empty(),empty(),empty(),0),NULL);
   while ((aux = getline(&buffer, &buffsize, fp)) != -1) {
-    removeSpaces(buffer);
-    //printf("Line Lenth %zu: \n", aux-1); //aux - 1 para nao contar com o \n
     //printf("Original = %s", buffer);
+    removeSpaces(buffer);
+    //printf("%s\n", buffer);
+    //printf("Line Lenth %zu: \n", aux-1); //aux - 1 para nao contar com o \n
     Instr plswork = parseInstr(buffer);
     ILIST a = mkList(plswork, NULL);
     lista = append(lista, a);
   }
 
   fclose(fp);
-  //printf("Lista \n");
-  //printList(lista);
+  printf("Lista: \n");
+  printList(lista);
+  printf("----------------------\n");
+
   //Percorrer Lista
   List* li;
   int val, a1, a2;
   while (lista != NULL) {
     Instr i = head(lista);
-    display();
     switch(i.op){
       case START:
+      break;
+      case QUIT:
+      return 0;
       break;
       case PRINT:
       li = lookup(getName(i.first));
@@ -52,10 +57,8 @@ int main(int argc, char const *argv[]) {
       insert(getName(i.first), getVal(i.second));
       break;
       case ADD:
-      printf("Tou no ADD\n");
       switch (i.tipo) {
         case 1:
-        printf("ENTREI NO TIPO %d\n", i.tipo);
         a1 = getHashValue(lookup(getName(i.second)));
         a2 = getHashValue(lookup(getName(i.third)));
         insert(getName(i.first), (a1 + a2));
@@ -72,7 +75,47 @@ int main(int argc, char const *argv[]) {
         insert(getName(i.first), (a2 + getVal(i.second)));
         break;
       }
+    break;
+    case SUB:
+    switch (i.tipo) {
+      case 1:
+      a1 = getHashValue(lookup(getName(i.second)));
+      a2 = getHashValue(lookup(getName(i.third)));
+      insert(getName(i.first), (a1 - a2));
       break;
+      case 2:
+      insert(getName(i.first), (getVal(i.second) - getVal(i.third)));
+      break;
+      case 3:
+      a1 = getHashValue(lookup(getName(i.second)));
+      insert(getName(i.first), (a1 - getVal(i.third)));
+      break;
+      case 4:
+      a2 = getHashValue(lookup(getName(i.third)));
+      insert(getName(i.first), (a2 - getVal(i.second)));
+      break;
+    }
+    break;
+    case MUL:
+    switch (i.tipo) {
+      case 1:
+      a1 = getHashValue(lookup(getName(i.second)));
+      a2 = getHashValue(lookup(getName(i.third)));
+      insert(getName(i.first), (a1 * a2));
+      break;
+      case 2:
+      insert(getName(i.first), (getVal(i.second) * getVal(i.third)));
+      break;
+      case 3:
+      a1 = getHashValue(lookup(getName(i.second)));
+      insert(getName(i.first), (a1 * getVal(i.third)));
+      break;
+      case 4:
+      a2 = getHashValue(lookup(getName(i.third)));
+      insert(getName(i.first), (a2 * getVal(i.second)));
+      break;
+    }
+    break;
     }
     lista = lista->tail;
   }
@@ -82,19 +125,25 @@ int main(int argc, char const *argv[]) {
   //Tipo 4 = int str
 
   //TESTE TIPOS
-  insert("p", 2);
-  insert("s", 1);
-  char* string = "k=s+p;";
-  printf("%d\n", getType(string, "+"));
-  Instr i = parseInstr(string);
-  printf("%d\n", i.tipo);
-  if (getType(string, "+") == 1) {
-    int a1 = getHashValue(lookup(getName(i.second)));
-    int a2 = getHashValue(lookup(getName(i.third)));
-    printf("%d %d \n", a1, a2);
-    insert(getName(i.first), (a1+a2));
-    display();
-  }
+  // char* s = "s = 1 + k;";
+  // printf("%s\n", s);
+  // removeSpaces(s);
+  // printf("%s\n", s);
+  // insert("a", 6);
+  // printf("%u\n", hash("k"));
+  // insert("p", 2);
+  // printf("%u\n", hash("p"));
+  // insert("s", 1);
+  // printf("%u\n", hash("s"));
+  // char* string = "k=s+p;";
+  // Instr i = parseInstr(string);
+  // if (i.tipo == 1) {
+  //   int a1 = getHashValue(lookup(getName(i.second)));
+  //   int a2 = getHashValue(lookup(getName(i.third)));
+  //   printf("%d %d \n", a1, a2);
+  //   insert(getName(i.first), (a1+a2));
+  //   display();
+  // }
 
   // TESTE HASH
   // ILIST lista = mkList(mkInstr(START,empty(),empty(),empty()),NULL);

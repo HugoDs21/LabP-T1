@@ -4,7 +4,7 @@
 #define HASH_SIZE 100
 #define MULTIPLIER 31
 
-typedef enum  {START, ATRIB, ADD, SUB, MUL, IF_I, PRINT, READ, GOTO_I, LABEL} OpKind;
+typedef enum  {START, QUIT, ATRIB, ADD, SUB, MUL, IF_I, PRINT, READ, GOTO_I, LABEL} OpKind;
 typedef enum {INT_CONST, STRING, EMPTY} ElemKind;
 
 typedef struct{
