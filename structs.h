@@ -31,6 +31,7 @@ char* getName(Elem);
 void escrever(Instr);
 void removeSpaces(char*);
 Instr parseInstr(char*);
+int getType(char*, char*);
 
 //---------------LIST--------------------
 

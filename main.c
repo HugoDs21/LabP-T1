@@ -34,6 +34,7 @@ int main(int argc, char const *argv[]) {
   int val, a1, a2;
   while (lista != NULL) {
     Instr i = head(lista);
+    display();
     switch(i.op){
       case START:
       break;
@@ -51,14 +52,16 @@ int main(int argc, char const *argv[]) {
       insert(getName(i.first), getVal(i.second));
       break;
       case ADD:
+      printf("Tou no ADD\n");
       switch (i.tipo) {
-        case 2:
-        insert(getName(i.first), (getVal(i.second) + getVal(i.third)));
-        break;
         case 1:
+        printf("ENTREI NO TIPO %d\n", i.tipo);
         a1 = getHashValue(lookup(getName(i.second)));
         a2 = getHashValue(lookup(getName(i.third)));
-        insert(getName(i.first), (getHashValue(lookup(getName(i.second))) + getHashValue(lookup(getName(i.third)))));
+        insert(getName(i.first), (a1 + a2));
+        break;
+        case 2:
+        insert(getName(i.first), (getVal(i.second) + getVal(i.third)));
         break;
         case 3:
         a1 = getHashValue(lookup(getName(i.second)));
@@ -67,26 +70,31 @@ int main(int argc, char const *argv[]) {
         case 4:
         a2 = getHashValue(lookup(getName(i.third)));
         insert(getName(i.first), (a2 + getVal(i.second)));
+        break;
       }
       break;
     }
     lista = lista->tail;
   }
-
   //Tipo 1 = str str
-  //Tipo 2 = int int
-  //Tipo 3 = str int
+  //Tipo 2 = int int ok
+  //Tipo 3 = str int ok
   //Tipo 4 = int str
 
-  //TESTE EXEC
-  // char* string = "escrever(k);";
-  // Instr i = parseInstr(string);
-  // escrever(i);
-  // insert(getName(i.first), 6);
-  // display();
-  // List* n = lookup("k");
-  // int val = getHashValue(n);
-  // printf("%d\n", val);
+  //TESTE TIPOS
+  insert("p", 2);
+  insert("s", 1);
+  char* string = "k=s+p;";
+  printf("%d\n", getType(string, "+"));
+  Instr i = parseInstr(string);
+  printf("%d\n", i.tipo);
+  if (getType(string, "+") == 1) {
+    int a1 = getHashValue(lookup(getName(i.second)));
+    int a2 = getHashValue(lookup(getName(i.third)));
+    printf("%d %d \n", a1, a2);
+    insert(getName(i.first), (a1+a2));
+    display();
+  }
 
   // TESTE HASH
   // ILIST lista = mkList(mkInstr(START,empty(),empty(),empty()),NULL);
