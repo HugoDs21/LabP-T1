@@ -33,6 +33,7 @@ int main(int argc, char const *argv[]) {
   printf("----------------------\n");
 
   //Percorrer Lista
+  char* lab;
   List* li;
   int val, a1, a2;
   while (lista != NULL) {
@@ -52,6 +53,9 @@ int main(int argc, char const *argv[]) {
       printf("Valor de %s = ", getName(i.first));
       scanf("%d", &val);
       insert(getName(i.first), val);
+      break;
+      case GOTO:
+      lab = getName(i.first);
       break;
       case ATRIB:
       insert(getName(i.first), getVal(i.second));
@@ -144,6 +148,11 @@ int main(int argc, char const *argv[]) {
   //   insert(getName(i.first), (a1+a2));
   //   display();
   // }
+  // char* s = "gotoL1";
+  // char* string = strdup(s);
+  // char* aux = strsep(&string, "o");
+  // aux = strsep(&string, "o");
+  // printf("%s\n", aux);
 
   // TESTE HASH
   // ILIST lista = mkList(mkInstr(START,empty(),empty(),empty()),NULL);

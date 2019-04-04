@@ -226,6 +226,12 @@ void escrever(Instr inst) {
     case QUIT:
     printf("quit\n");
     break;
+    case GOTO:
+    printf("Goto %s\n", getName(inst.first));
+    break;
+    case LABEL:
+    printf("Label %s\n", getName(inst.first));
+    break;
   }
 }
 
@@ -310,6 +316,24 @@ Instr parseInstr(char* s){
     aux = strsep(&string, ")");
     Elem ch = mkVar(aux);
     i = mkInstr(PRINT,ch,empty(),empty(),0);
+    return i;
+  }
+  //GOTO goto L1
+  if (strstr(s, "goto") != NULL) {
+    char* string = strdup(s);
+    char* aux = strsep(&string, ":");
+    aux = strsep(&string, ":");
+    Elem ch = mkVar(aux);
+    i = mkInstr(GOTO,ch,empty(),empty(),0);
+    return i;
+  }
+  //LABEL label L1
+  if (strstr(s, "label") != NULL) {
+    char* string = strdup(s);
+    char* aux = strsep(&string, ":");
+    aux = strsep(&string, ":");
+    Elem ch = mkVar(aux);
+    i = mkInstr(LABEL,ch,empty(),empty(),0);
     return i;
   }
   //ATRIB s = 2;

@@ -1,8 +1,7 @@
-ler(ab);
-ler(cd);
-p = 2;
+k = 2;
+p = 40 + k;
+goto: L1;
+p = p + 1;
+label: L1;
+escrever(p);
 quit;
-k = p * ab;
-f = k * cd;
-p = p * 2;
-escrever(f);
