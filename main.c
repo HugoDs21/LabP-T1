@@ -71,6 +71,8 @@ int main(int argc, char const *argv[]) {
         g = head(lista);
       }
       break;
+      case LABEL:
+      break;
       case ATRIB:
       insert(getName(i.first), getVal(i.second));
       break;

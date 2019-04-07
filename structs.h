@@ -32,7 +32,6 @@ void escrever(Instr);
 void removeSpaces(char*);
 Instr parseInstr(char*, int);
 int getType(char*, char*);
-//void exec(Instr);
 
 //---------------LIST--------------------
 

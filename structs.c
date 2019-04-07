@@ -122,7 +122,7 @@ void display() {
 List* lookup(char* s){
   int index = hash(s);
   while (table[index] != NULL) {
-    if (table[index]->key, s) {
+    if (table[index]->key) {
       return table[index];
     }
     index ++;
@@ -242,10 +242,10 @@ void escrever(Instr inst) {
 void removeSpaces(char* str){
   str[strlen(str)-2] = '\0';
   int count = 0;
-    for (int i = 0; str[i]; i++)
-        if (str[i] != ' ')
-            str[count++] = str[i];
-    str[count] = '\0';
+  for (int i = 0; str[i]; i++)
+  if (str[i] != ' ')
+  str[count++] = str[i];
+  str[count] = '\0';
 }
 
 int getType(char* str, char* ch){
@@ -255,14 +255,13 @@ int getType(char* str, char* ch){
   //Tipo 3 = str int
   //Tipo 4 = int str
   char *token, *string, *var1, *var2, *dup1, *dup2;
-  int tmp1,tmp2, tipo;
+  int tipo;
   string = strdup(str);
   if (string == NULL)
   return -1;
 
   token = strsep(&string, "=");
   token = strsep(&string, "=");
-  //////token[strlen(token)-1] = '\0'; // remove ";"
   dup1 = strdup(token);
   dup2 = strdup(token);
 
@@ -275,7 +274,6 @@ int getType(char* str, char* ch){
       return tipo;
     }
     else {
-      tmp2 = atoi(var1);
       tipo = 3;
       return tipo;
     }
@@ -283,10 +281,8 @@ int getType(char* str, char* ch){
 
   var2 = strsep(&dup2, ch);
   if(!(var2[0] >= 0x60 && var2[0] <= 0x7B)){
-    tmp1 = atoi(var2);
     var2 = strsep(&dup2, ch);
     if(!(var2[0] >= 0x61 && var2[0] <= 0x7A)){
-      tmp2 = atoi(var2);
       tipo = 2;
       return tipo;
     }
@@ -295,6 +291,7 @@ int getType(char* str, char* ch){
       return tipo;
     }
   }
+  return 0;
 }
 
 Instr parseInstr(char* s, int index){
@@ -351,9 +348,9 @@ Instr parseInstr(char* s, int index){
   }
   //ATRIB s = 2;
   if (strstr(s, "+") == NULL &&
-      strstr(s, "-") == NULL &&
-      strstr(s, "*") == NULL &&
-      strstr(s, "/") == NULL) {
+  strstr(s, "-") == NULL &&
+  strstr(s, "*") == NULL &&
+  strstr(s, "/") == NULL) {
     char* string = strdup(s);
     char* aux = strsep(&string, "=");
     Elem var = mkVar(aux);
@@ -546,8 +543,9 @@ Instr parseInstr(char* s, int index){
 }
 
 int getIndex(char* s, ILIST lista){
+  Instr i;
   while(lista != NULL){
-    Instr i = head(lista);
+    i = head(lista);
     if(i.op == LABEL){
       if (strcmp(s, getName(i.first)) == 0) {
         return i.index;
@@ -557,89 +555,3 @@ int getIndex(char* s, ILIST lista){
   }
   return 0;
 }
-
-// void exec(Instr i){
-//   char* lab;
-//   List* li;
-//   int val, a1, a2;
-//   switch(i.op){
-//     case START:
-//     break;
-//     case PRINT:
-//     li = lookup(getName(i.first));
-//     val = getHashValue(li);
-//     printf("%d ", val);
-//     break;
-//     case READ:
-//     printf("Valor de %s = ", getName(i.first));
-//     scanf("%d", &val);
-//     insert(getName(i.first), val);
-//     break;
-//     case GOTO:
-//     lab = getName(i.first);
-//     break;
-//     case ATRIB:
-//     insert(getName(i.first), getVal(i.second));
-//     break;
-//     case ADD:
-//     switch (i.type) {
-//       case 1:
-//       a1 = getHashValue(lookup(getName(i.second)));
-//       a2 = getHashValue(lookup(getName(i.third)));
-//       insert(getName(i.first), (a1 + a2));
-//       break;
-//       case 2:
-//       insert(getName(i.first), (getVal(i.second) + getVal(i.third)));
-//       break;
-//       case 3:
-//       a1 = getHashValue(lookup(getName(i.second)));
-//       insert(getName(i.first), (a1 + getVal(i.third)));
-//       break;
-//       case 4:
-//       a2 = getHashValue(lookup(getName(i.third)));
-//       insert(getName(i.first), (a2 + getVal(i.second)));
-//       break;
-//     }
-//   break;
-//   case SUB:
-//   switch (i.type) {
-//     case 1:
-//     a1 = getHashValue(lookup(getName(i.second)));
-//     a2 = getHashValue(lookup(getName(i.third)));
-//     insert(getName(i.first), (a1 - a2));
-//     break;
-//     case 2:
-//     insert(getName(i.first), (getVal(i.second) - getVal(i.third)));
-//     break;
-//     case 3:
-//     a1 = getHashValue(lookup(getName(i.second)));
-//     insert(getName(i.first), (a1 - getVal(i.third)));
-//     break;
-//     case 4:
-//     a2 = getHashValue(lookup(getName(i.third)));
-//     insert(getName(i.first), (a2 - getVal(i.second)));
-//     break;
-//   }
-//   break;
-//   case MUL:
-//   switch (i.type) {
-//     case 1:
-//     a1 = getHashValue(lookup(getName(i.second)));
-//     a2 = getHashValue(lookup(getName(i.third)));
-//     insert(getName(i.first), (a1 * a2));
-//     break;
-//     case 2:
-//     insert(getName(i.first), (getVal(i.second) * getVal(i.third)));
-//     break;
-//     case 3:
-//     a1 = getHashValue(lookup(getName(i.second)));
-//     insert(getName(i.first), (a1 * getVal(i.third)));
-//     break;
-//     case 4:
-//     a2 = getHashValue(lookup(getName(i.third)));
-//     insert(getName(i.first), (a2 * getVal(i.second)));
-//     break;
-//   }
-//   break;
-//   }
-// }

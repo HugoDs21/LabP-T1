@@ -1,8 +1,7 @@
 ler(k);
 if: k;
 goto: L1;
-k = 1;
-k = k + 10;
+k = 42;
 escrever(k);
 quit;
 label: L1;
