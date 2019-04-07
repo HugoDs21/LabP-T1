@@ -24,13 +24,14 @@ Elem empty(){
   return new;
 }
 
-Instr mkInstr(OpKind oper, Elem x, Elem y, Elem z, int t){
+Instr mkInstr(OpKind oper, Elem x, Elem y, Elem z, int t, int ind){
   Instr new;
   new.op = oper;
   new.first = x;
   new.second = y;
   new.third = z;
-  new.tipo = t;
+  new.type = t;
+  new.index = ind;
   return new;
 }
 
@@ -124,7 +125,7 @@ List* lookup(char* s){
     if (table[index]->key, s) {
       return table[index];
     }
-    index++;
+    index ++;
     index %= HASH_SIZE;
   }
   return NULL;
@@ -224,7 +225,10 @@ void escrever(Instr inst) {
     case START:
     break;
     case QUIT:
-    printf("quit\n");
+    printf("Quit\n");
+    break;
+    case IF:
+    printf("If %s\n", getName(inst.first));
     break;
     case GOTO:
     printf("Goto %s\n", getName(inst.first));
@@ -293,11 +297,11 @@ int getType(char* str, char* ch){
   }
 }
 
-Instr parseInstr(char* s){
+Instr parseInstr(char* s, int index){
   Instr i;
   //QUIT quit
   if (strstr(s, "quit") != NULL) {
-    i = mkInstr(QUIT,empty(),empty(),empty(),0);
+    i = mkInstr(QUIT,empty(),empty(),empty(),0, index);
     return i;
   }
   //READ ler(k)
@@ -306,7 +310,7 @@ Instr parseInstr(char* s){
     char* aux = strsep(&string, "(");
     aux = strsep(&string, ")");
     Elem ch = mkVar(aux);
-    i = mkInstr(READ,ch,empty(),empty(),0);
+    i = mkInstr(READ,ch,empty(),empty(),0, index);
     return i;
   }
   //PRINT escrever(p)
@@ -315,25 +319,34 @@ Instr parseInstr(char* s){
     char* aux = strsep(&string, "(");
     aux = strsep(&string, ")");
     Elem ch = mkVar(aux);
-    i = mkInstr(PRINT,ch,empty(),empty(),0);
+    i = mkInstr(PRINT,ch,empty(),empty(),0, index);
     return i;
   }
-  //GOTO goto L1
+  //IF if: k
+  if (strstr(s, "if") != NULL) {
+    char* string = strdup(s);
+    char* aux = strsep(&string, ":");
+    aux = strsep(&string, ":");
+    Elem ch = mkVar(aux);
+    i = mkInstr(IF,ch, empty(), empty(), 0, index);
+    return i;
+  }
+  //GOTO goto: L1
   if (strstr(s, "goto") != NULL) {
     char* string = strdup(s);
     char* aux = strsep(&string, ":");
     aux = strsep(&string, ":");
     Elem ch = mkVar(aux);
-    i = mkInstr(GOTO,ch,empty(),empty(),0);
+    i = mkInstr(GOTO,ch,empty(),empty(),0, index);
     return i;
   }
-  //LABEL label L1
+  //LABEL label: L1
   if (strstr(s, "label") != NULL) {
     char* string = strdup(s);
     char* aux = strsep(&string, ":");
     aux = strsep(&string, ":");
     Elem ch = mkVar(aux);
-    i = mkInstr(LABEL,ch,empty(),empty(),0);
+    i = mkInstr(LABEL,ch,empty(),empty(),0, index);
     return i;
   }
   //ATRIB s = 2;
@@ -346,7 +359,7 @@ Instr parseInstr(char* s){
     Elem var = mkVar(aux);
     aux = strsep(&string, ";");
     Elem num = mkInt(atoi(aux));
-    i = mkInstr(ATRIB,var,num,empty(),0);
+    i = mkInstr(ATRIB,var,num,empty(),0, index);
     return i;
   }
   //CONTAS
@@ -364,7 +377,7 @@ Instr parseInstr(char* s){
       Elem s11 = mkVar(var);
       var = strsep(&token, "+");
       Elem s21 = mkVar(var);
-      i = mkInstr(ADD,v1,s11,s21,t);
+      i = mkInstr(ADD,v1,s11,s21,t, index);
       return i;
       break;
       case 2:
@@ -377,7 +390,7 @@ Instr parseInstr(char* s){
       Elem s12 = mkInt(atoi(var));
       var = strsep(&token, "+");
       Elem s22 = mkInt(atoi(var));
-      i = mkInstr(ADD,v2,s12,s22,t);
+      i = mkInstr(ADD,v2,s12,s22,t, index);
       return i;
       break;
       case 3:
@@ -390,7 +403,7 @@ Instr parseInstr(char* s){
       Elem s13 = mkVar(var);
       var = strsep(&token, "+");
       Elem s23 = mkInt(atoi(var));
-      i = mkInstr(ADD,v3,s13,s23,t);
+      i = mkInstr(ADD,v3,s13,s23,t, index);
       return i;
       break;
       case 4:
@@ -403,7 +416,7 @@ Instr parseInstr(char* s){
       Elem s14 = mkInt(atoi(var));
       var = strsep(&token, "+");
       Elem s24 = mkVar(var);
-      i = mkInstr(ADD,v4,s14,s24,t);
+      i = mkInstr(ADD,v4,s14,s24,t, index);
       return i;
       break;
     }
@@ -424,7 +437,7 @@ Instr parseInstr(char* s){
       Elem s11 = mkVar(var);
       var = strsep(&token, "-");
       Elem s21 = mkVar(var);
-      i = mkInstr(SUB,v1,s11,s21,t);
+      i = mkInstr(SUB,v1,s11,s21,t, index);
       return i;
       break;
       case 2:
@@ -437,7 +450,7 @@ Instr parseInstr(char* s){
       Elem s12 = mkInt(atoi(var));
       var = strsep(&token, "-");
       Elem s22 = mkInt(atoi(var));
-      i = mkInstr(SUB,v2,s12,s22,t);
+      i = mkInstr(SUB,v2,s12,s22,t, index);
       return i;
       break;
       case 3:
@@ -450,7 +463,7 @@ Instr parseInstr(char* s){
       Elem s13 = mkVar(var);
       var = strsep(&token, "-");
       Elem s23 = mkInt(atoi(var));
-      i = mkInstr(SUB,v3,s13,s23,t);
+      i = mkInstr(SUB,v3,s13,s23,t, index);
       return i;
       break;
       case 4:
@@ -463,7 +476,7 @@ Instr parseInstr(char* s){
       Elem s14 = mkInt(atoi(var));
       var = strsep(&token, "-");
       Elem s24 = mkVar(var);
-      i = mkInstr(SUB,v4,s14,s24,t);
+      i = mkInstr(SUB,v4,s14,s24,t, index);
       return i;
       break;
     }
@@ -484,7 +497,7 @@ Instr parseInstr(char* s){
       Elem s11 = mkVar(var);
       var = strsep(&token, "*");
       Elem s21 = mkVar(var);
-      i = mkInstr(MUL,v1,s11,s21,t);
+      i = mkInstr(MUL,v1,s11,s21,t, index);
       return i;
       break;
       case 2:
@@ -497,7 +510,7 @@ Instr parseInstr(char* s){
       Elem s12 = mkInt(atoi(var));
       var = strsep(&token, "*");
       Elem s22 = mkInt(atoi(var));
-      i = mkInstr(MUL,v2,s12,s22,t);
+      i = mkInstr(MUL,v2,s12,s22,t, index);
       return i;
       break;
       case 3:
@@ -510,7 +523,7 @@ Instr parseInstr(char* s){
       Elem s13 = mkVar(var);
       var = strsep(&token, "*");
       Elem s23 = mkInt(atoi(var));
-      i = mkInstr(MUL,v3,s13,s23,t);
+      i = mkInstr(MUL,v3,s13,s23,t, index);
       return i;
       break;
       case 4:
@@ -523,7 +536,7 @@ Instr parseInstr(char* s){
       Elem s14 = mkInt(atoi(var));
       var = strsep(&token, "+");
       Elem s24 = mkVar(var);
-      i = mkInstr(MUL,v4,s14,s24,t);
+      i = mkInstr(MUL,v4,s14,s24,t, index);
       return i;
       break;
     }
@@ -531,3 +544,102 @@ Instr parseInstr(char* s){
   }
   return i;
 }
+
+int getIndex(char* s, ILIST lista){
+  while(lista != NULL){
+    Instr i = head(lista);
+    if(i.op == LABEL){
+      if (strcmp(s, getName(i.first)) == 0) {
+        return i.index;
+      }
+    }
+    lista = lista->tail;
+  }
+  return 0;
+}
+
+// void exec(Instr i){
+//   char* lab;
+//   List* li;
+//   int val, a1, a2;
+//   switch(i.op){
+//     case START:
+//     break;
+//     case PRINT:
+//     li = lookup(getName(i.first));
+//     val = getHashValue(li);
+//     printf("%d ", val);
+//     break;
+//     case READ:
+//     printf("Valor de %s = ", getName(i.first));
+//     scanf("%d", &val);
+//     insert(getName(i.first), val);
+//     break;
+//     case GOTO:
+//     lab = getName(i.first);
+//     break;
+//     case ATRIB:
+//     insert(getName(i.first), getVal(i.second));
+//     break;
+//     case ADD:
+//     switch (i.type) {
+//       case 1:
+//       a1 = getHashValue(lookup(getName(i.second)));
+//       a2 = getHashValue(lookup(getName(i.third)));
+//       insert(getName(i.first), (a1 + a2));
+//       break;
+//       case 2:
+//       insert(getName(i.first), (getVal(i.second) + getVal(i.third)));
+//       break;
+//       case 3:
+//       a1 = getHashValue(lookup(getName(i.second)));
+//       insert(getName(i.first), (a1 + getVal(i.third)));
+//       break;
+//       case 4:
+//       a2 = getHashValue(lookup(getName(i.third)));
+//       insert(getName(i.first), (a2 + getVal(i.second)));
+//       break;
+//     }
+//   break;
+//   case SUB:
+//   switch (i.type) {
+//     case 1:
+//     a1 = getHashValue(lookup(getName(i.second)));
+//     a2 = getHashValue(lookup(getName(i.third)));
+//     insert(getName(i.first), (a1 - a2));
+//     break;
+//     case 2:
+//     insert(getName(i.first), (getVal(i.second) - getVal(i.third)));
+//     break;
+//     case 3:
+//     a1 = getHashValue(lookup(getName(i.second)));
+//     insert(getName(i.first), (a1 - getVal(i.third)));
+//     break;
+//     case 4:
+//     a2 = getHashValue(lookup(getName(i.third)));
+//     insert(getName(i.first), (a2 - getVal(i.second)));
+//     break;
+//   }
+//   break;
+//   case MUL:
+//   switch (i.type) {
+//     case 1:
+//     a1 = getHashValue(lookup(getName(i.second)));
+//     a2 = getHashValue(lookup(getName(i.third)));
+//     insert(getName(i.first), (a1 * a2));
+//     break;
+//     case 2:
+//     insert(getName(i.first), (getVal(i.second) * getVal(i.third)));
+//     break;
+//     case 3:
+//     a1 = getHashValue(lookup(getName(i.second)));
+//     insert(getName(i.first), (a1 * getVal(i.third)));
+//     break;
+//     case 4:
+//     a2 = getHashValue(lookup(getName(i.third)));
+//     insert(getName(i.first), (a2 * getVal(i.second)));
+//     break;
+//   }
+//   break;
+//   }
+// }

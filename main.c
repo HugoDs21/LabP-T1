@@ -9,6 +9,7 @@ int main(int argc, char const *argv[]) {
   char* buffer = NULL;
   size_t buffsize = 32;
   ssize_t aux;
+  int i = 1;
 
   FILE *fp;
   fp = fopen(argv[1], "r");
@@ -16,15 +17,12 @@ int main(int argc, char const *argv[]) {
     printf("FILE ERROR\n");
     return 0;
   }
-  ILIST lista = mkList(mkInstr(START,empty(),empty(),empty(),0),NULL);
+  ILIST lista = mkList(mkInstr(START,empty(),empty(),empty(),0, 0),NULL);
   while ((aux = getline(&buffer, &buffsize, fp)) != -1) {
-    //printf("Original = %s", buffer);
     removeSpaces(buffer);
-    //printf("%s\n", buffer);
-    //printf("Line Lenth %zu: \n", aux-1); //aux - 1 para nao contar com o \n
-    Instr plswork = parseInstr(buffer);
-    ILIST a = mkList(plswork, NULL);
-    lista = append(lista, a);
+    Instr inst = parseInstr(buffer, i);
+    i++;
+    lista = addLast(inst, lista);
   }
 
   fclose(fp);
@@ -33,35 +31,51 @@ int main(int argc, char const *argv[]) {
   printf("----------------------\n");
 
   //Percorrer Lista
-  char* lab;
-  List* li;
-  int val, a1, a2;
   while (lista != NULL) {
     Instr i = head(lista);
+    Instr g;
+    char* lab;
+    List* li;
+    int val, a1, a2;
     switch(i.op){
       case START:
       break;
       case QUIT:
+      printf("\n");
       return 0;
       break;
       case PRINT:
       li = lookup(getName(i.first));
       val = getHashValue(li);
-      printf("%d\n", val);
+      printf("%d ", val);
       break;
       case READ:
       printf("Valor de %s = ", getName(i.first));
       scanf("%d", &val);
       insert(getName(i.first), val);
       break;
+      case IF:
+      li = lookup(getName(i.first));
+      val = getHashValue(li);
+      if (val == 0) {
+        lista = lista->tail;
+      }
+      break;
       case GOTO:
       lab = getName(i.first);
+      a1 = getIndex(lab, lista);
+      lista = lista->tail;
+      g = head(lista);
+      while (a1 != g.index) {
+        lista = lista->tail;
+        g = head(lista);
+      }
       break;
       case ATRIB:
       insert(getName(i.first), getVal(i.second));
       break;
       case ADD:
-      switch (i.tipo) {
+      switch (i.type) {
         case 1:
         a1 = getHashValue(lookup(getName(i.second)));
         a2 = getHashValue(lookup(getName(i.third)));
@@ -79,47 +93,47 @@ int main(int argc, char const *argv[]) {
         insert(getName(i.first), (a2 + getVal(i.second)));
         break;
       }
-    break;
-    case SUB:
-    switch (i.tipo) {
-      case 1:
-      a1 = getHashValue(lookup(getName(i.second)));
-      a2 = getHashValue(lookup(getName(i.third)));
-      insert(getName(i.first), (a1 - a2));
       break;
-      case 2:
-      insert(getName(i.first), (getVal(i.second) - getVal(i.third)));
+      case SUB:
+      switch (i.type) {
+        case 1:
+        a1 = getHashValue(lookup(getName(i.second)));
+        a2 = getHashValue(lookup(getName(i.third)));
+        insert(getName(i.first), (a1 - a2));
+        break;
+        case 2:
+        insert(getName(i.first), (getVal(i.second) - getVal(i.third)));
+        break;
+        case 3:
+        a1 = getHashValue(lookup(getName(i.second)));
+        insert(getName(i.first), (a1 - getVal(i.third)));
+        break;
+        case 4:
+        a2 = getHashValue(lookup(getName(i.third)));
+        insert(getName(i.first), (a2 - getVal(i.second)));
+        break;
+      }
       break;
-      case 3:
-      a1 = getHashValue(lookup(getName(i.second)));
-      insert(getName(i.first), (a1 - getVal(i.third)));
+      case MUL:
+      switch (i.type) {
+        case 1:
+        a1 = getHashValue(lookup(getName(i.second)));
+        a2 = getHashValue(lookup(getName(i.third)));
+        insert(getName(i.first), (a1 * a2));
+        break;
+        case 2:
+        insert(getName(i.first), (getVal(i.second) * getVal(i.third)));
+        break;
+        case 3:
+        a1 = getHashValue(lookup(getName(i.second)));
+        insert(getName(i.first), (a1 * getVal(i.third)));
+        break;
+        case 4:
+        a2 = getHashValue(lookup(getName(i.third)));
+        insert(getName(i.first), (a2 * getVal(i.second)));
+        break;
+      }
       break;
-      case 4:
-      a2 = getHashValue(lookup(getName(i.third)));
-      insert(getName(i.first), (a2 - getVal(i.second)));
-      break;
-    }
-    break;
-    case MUL:
-    switch (i.tipo) {
-      case 1:
-      a1 = getHashValue(lookup(getName(i.second)));
-      a2 = getHashValue(lookup(getName(i.third)));
-      insert(getName(i.first), (a1 * a2));
-      break;
-      case 2:
-      insert(getName(i.first), (getVal(i.second) * getVal(i.third)));
-      break;
-      case 3:
-      a1 = getHashValue(lookup(getName(i.second)));
-      insert(getName(i.first), (a1 * getVal(i.third)));
-      break;
-      case 4:
-      a2 = getHashValue(lookup(getName(i.third)));
-      insert(getName(i.first), (a2 * getVal(i.second)));
-      break;
-    }
-    break;
     }
     lista = lista->tail;
   }

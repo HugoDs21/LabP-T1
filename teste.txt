@@ -1,7 +1,10 @@
-k = 2;
-p = 40 + k;
+ler(k);
+if: k;
 goto: L1;
-p = p + 1;
+k = 1;
+k = k + 10;
+escrever(k);
+quit;
 label: L1;
-escrever(p);
+escrever(k);
 quit;

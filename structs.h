@@ -19,19 +19,20 @@ typedef struct{
 typedef struct{
   OpKind op;
   Elem first, second, third;
-  int tipo;
+  int type, index;
 } Instr;
 
 Elem mkVar(char*);
 Elem mkInt(int);
 Elem empty();
-Instr mkInstr(OpKind, Elem, Elem, Elem, int);
+Instr mkInstr(OpKind, Elem, Elem, Elem, int, int);
 int getVal(Elem );
 char* getName(Elem);
 void escrever(Instr);
 void removeSpaces(char*);
-Instr parseInstr(char*);
+Instr parseInstr(char*, int);
 int getType(char*, char*);
+//void exec(Instr);
 
 //---------------LIST--------------------
 
@@ -46,6 +47,7 @@ ILIST tail(ILIST);
 void printList(ILIST);
 ILIST append(ILIST, ILIST);
 ILIST addLast(Instr, ILIST);
+int getIndex(char*, ILIST);
 
 //-----------HASH----------------------
 
