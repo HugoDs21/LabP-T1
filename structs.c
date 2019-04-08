@@ -174,7 +174,8 @@ unsigned int hash(char* str){
 }
 
 void init_table(){
-  for(int i = 0; i < HASH_SIZE; i++){
+  int i = 0;
+  for(i; i < HASH_SIZE; i++){
     table[i] = NULL;
   }
 }
@@ -305,7 +306,8 @@ void removeSpaces(char* str){
   //
   str[strlen(str)-2] = '\0';
   int count = 0;
-  for (int i = 0; str[i]; i++)
+  int i = 0;
+  for (i; str[i]; i++)
   if (str[i] != ' ')
   str[count++] = str[i];
   str[count] = '\0';
