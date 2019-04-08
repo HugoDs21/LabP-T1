@@ -1,0 +1,9 @@
+ler(k);
+if: k;
+goto: L1;
+k = 42;
+escrever(k);
+quit;
+label: L1;
+escrever(k);
+quit;
