@@ -44,9 +44,7 @@ int main(int argc, char const *argv[]) {
         case START:
         break;
         case QUIT:
-        // while (lista != NULL) {
-        //   lista = lista->tail;
-        // }
+        lista->tail = NULL;
         break;
         case PRINT:
         li = lookup(getName(i.first));
