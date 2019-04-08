@@ -1,3 +1,3 @@
-language: c99
+language: c
 script:
   make
