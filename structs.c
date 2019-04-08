@@ -4,6 +4,7 @@
 #include <string.h>
 #include <ctype.h>
 
+//-------------------------Instr--------------------------------------
 Elem mkVar(char* s){
   Elem new;
   new.kind = STRING;
@@ -92,6 +93,74 @@ char* getName(Elem x){
   return NULL;
 }
 
+int getHashValue(List* p){
+  return p->value;
+}
+
+char* getHashKey(List* p){
+  return p->key;
+}
+
+int getType(char* str, char* ch){
+  //TIPOS
+  //Tipo 1 = str str
+  //Tipo 2 = int int
+  //Tipo 3 = str int
+  //Tipo 4 = int str
+  char *token, *string, *var1, *var2, *dup1, *dup2;
+  int tipo;
+  string = strdup(str);
+  if (string == NULL)
+  return -1;
+
+  token = strsep(&string, "=");
+  token = strsep(&string, "=");
+  dup1 = strdup(token);
+  dup2 = strdup(token);
+
+  var1 = strsep(&dup1, ch);
+  if((var1[0] >= 97 && var1[0] <= 123) || (var1[0] >= 65 && var1[0] <= 90)) // detect string
+  {
+    var1 = strsep(&dup1, ch);
+    if((var1[0] >= 97 && var1[0] <= 123) || (var1[0] >= 65 && var1[0] <= 90)){
+      tipo = 1;
+      return tipo;
+    }
+    else {
+      tipo = 3;
+      return tipo;
+    }
+  }
+
+  var2 = strsep(&dup2, ch);
+  if(!((var2[0] >= 97 && var2[0] <= 123) || (var2[0] >= 65 && var2[0] <= 90))){
+    var2 = strsep(&dup2, ch);
+    if(!((var2[0] >= 97 && var2[0] <= 123) || (var2[0] >= 65 && var2[0] <= 90))){
+      tipo = 2;
+      return tipo;
+    }
+    else {
+      tipo = 4;
+      return tipo;
+    }
+  }
+  return 0;
+}
+
+int getIndex(char* s, ILIST lista){
+  Instr i;
+  while(lista != NULL){
+    i = head(lista);
+    if(i.op == LABEL){
+      if (strcmp(s, getName(i.first)) == 0) {
+        return i.index;
+      }
+    }
+    lista = lista->tail;
+  }
+  return 0;
+}
+
 //-----------Hash Funcs---------------------------
 
 unsigned int hash(char* str){
@@ -141,13 +210,6 @@ void insert(char* k, int val){
   table[index] = new;
 }
 
-int getHashValue(List* p){
-  return p->value;
-}
-
-char* getHashKey(List* p){
-  return p->key;
-}
 
 //--------------------FUNCS-----------------------------------------------
 
@@ -240,6 +302,7 @@ void escrever(Instr inst) {
 }
 
 void removeSpaces(char* str){
+  //
   str[strlen(str)-2] = '\0';
   int count = 0;
   for (int i = 0; str[i]; i++)
@@ -248,51 +311,6 @@ void removeSpaces(char* str){
   str[count] = '\0';
 }
 
-int getType(char* str, char* ch){
-  //TIPOS
-  //Tipo 1 = str str
-  //Tipo 2 = int int
-  //Tipo 3 = str int
-  //Tipo 4 = int str
-  char *token, *string, *var1, *var2, *dup1, *dup2;
-  int tipo;
-  string = strdup(str);
-  if (string == NULL)
-  return -1;
-
-  token = strsep(&string, "=");
-  token = strsep(&string, "=");
-  dup1 = strdup(token);
-  dup2 = strdup(token);
-
-  var1 = strsep(&dup1, ch);
-  if((var1[0] >= 0x60 && var1[0] <= 0x7B)) // detect string
-  {
-    var1 = strsep(&dup1, ch);
-    if((var1[0] >= 0x61 && var1[0] <= 0x7A)){
-      tipo = 1;
-      return tipo;
-    }
-    else {
-      tipo = 3;
-      return tipo;
-    }
-  }
-
-  var2 = strsep(&dup2, ch);
-  if(!(var2[0] >= 0x60 && var2[0] <= 0x7B)){
-    var2 = strsep(&dup2, ch);
-    if(!(var2[0] >= 0x61 && var2[0] <= 0x7A)){
-      tipo = 2;
-      return tipo;
-    }
-    else {
-      tipo = 4;
-      return tipo;
-    }
-  }
-  return 0;
-}
 
 Instr parseInstr(char* s, int index){
   Instr i;
@@ -369,7 +387,6 @@ Instr parseInstr(char* s, int index){
       token = strsep(&string, "=");
       Elem v1 = mkVar(token);
       token = strsep(&string, "=");
-      //token[strlen(token)-1] = '\0';
       var = strsep(&token, "+");
       Elem s11 = mkVar(var);
       var = strsep(&token, "+");
@@ -382,7 +399,6 @@ Instr parseInstr(char* s, int index){
       token = strsep(&string, "=");
       Elem v2 = mkVar(token);
       token = strsep(&string, "=");
-      //token[strlen(token)-1] = '\0';
       var = strsep(&token, "+");
       Elem s12 = mkInt(atoi(var));
       var = strsep(&token, "+");
@@ -395,7 +411,6 @@ Instr parseInstr(char* s, int index){
       token = strsep(&string, "=");
       Elem v3 = mkVar(token);
       token = strsep(&string, "=");
-      //token[strlen(token)-1] = '\0';
       var = strsep(&token, "+");
       Elem s13 = mkVar(var);
       var = strsep(&token, "+");
@@ -408,7 +423,6 @@ Instr parseInstr(char* s, int index){
       token = strsep(&string, "=");
       Elem v4 = mkVar(token);
       token = strsep(&string, "=");
-      //token[strlen(token)-1] = '\0';
       var = strsep(&token, "+");
       Elem s14 = mkInt(atoi(var));
       var = strsep(&token, "+");
@@ -429,7 +443,6 @@ Instr parseInstr(char* s, int index){
       token = strsep(&string, "=");
       Elem v1 = mkVar(token);
       token = strsep(&string, "=");
-      //token[strlen(token)-1] = '\0';
       var = strsep(&token, "-");
       Elem s11 = mkVar(var);
       var = strsep(&token, "-");
@@ -442,7 +455,6 @@ Instr parseInstr(char* s, int index){
       token = strsep(&string, "=");
       Elem v2 = mkVar(token);
       token = strsep(&string, "=");
-      //token[strlen(token)-1] = '\0';
       var = strsep(&token, "-");
       Elem s12 = mkInt(atoi(var));
       var = strsep(&token, "-");
@@ -455,7 +467,6 @@ Instr parseInstr(char* s, int index){
       token = strsep(&string, "=");
       Elem v3 = mkVar(token);
       token = strsep(&string, "=");
-      //token[strlen(token)-1] = '\0';
       var = strsep(&token, "-");
       Elem s13 = mkVar(var);
       var = strsep(&token, "-");
@@ -468,7 +479,6 @@ Instr parseInstr(char* s, int index){
       token = strsep(&string, "=");
       Elem v4 = mkVar(token);
       token = strsep(&string, "=");
-      //token[strlen(token)-1] = '\0';
       var = strsep(&token, "-");
       Elem s14 = mkInt(atoi(var));
       var = strsep(&token, "-");
@@ -489,7 +499,6 @@ Instr parseInstr(char* s, int index){
       token = strsep(&string, "=");
       Elem v1 = mkVar(token);
       token = strsep(&string, "=");
-      //token[strlen(token)-1] = '\0';
       var = strsep(&token, "*");
       Elem s11 = mkVar(var);
       var = strsep(&token, "*");
@@ -502,7 +511,6 @@ Instr parseInstr(char* s, int index){
       token = strsep(&string, "=");
       Elem v2 = mkVar(token);
       token = strsep(&string, "=");
-      //token[strlen(token)-1] = '\0';
       var = strsep(&token, "*");
       Elem s12 = mkInt(atoi(var));
       var = strsep(&token, "*");
@@ -515,7 +523,6 @@ Instr parseInstr(char* s, int index){
       token = strsep(&string, "=");
       Elem v3 = mkVar(token);
       token = strsep(&string, "=");
-      //token[strlen(token)-1] = '\0';
       var = strsep(&token, "*");
       Elem s13 = mkVar(var);
       var = strsep(&token, "*");
@@ -528,7 +535,6 @@ Instr parseInstr(char* s, int index){
       token = strsep(&string, "=");
       Elem v4 = mkVar(token);
       token = strsep(&string, "=");
-      //token[strlen(token)-1] = '\0';
       var = strsep(&token, "*");
       Elem s14 = mkInt(atoi(var));
       var = strsep(&token, "+");
@@ -540,18 +546,4 @@ Instr parseInstr(char* s, int index){
     return i;
   }
   return i;
-}
-
-int getIndex(char* s, ILIST lista){
-  Instr i;
-  while(lista != NULL){
-    i = head(lista);
-    if(i.op == LABEL){
-      if (strcmp(s, getName(i.first)) == 0) {
-        return i.index;
-      }
-    }
-    lista = lista->tail;
-  }
-  return 0;
 }

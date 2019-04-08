@@ -3,19 +3,30 @@
 #include <stdlib.h>
 #include <string.h>
 
-//./main file.txt
+//./main {files.txt}
 int main(int argc, char const *argv[]) {
   init_table();
   char* buffer = NULL;
   size_t buffsize = 32;
   ssize_t aux;
   int i = 1;
-  int f = 1;
-  while (argv[f] != NULL) {
-    printf("File: %d \n", f);
+  int file = 1;
+  int opcao;
+  printf("[1] START\n");
+  printf("[2] QUIT\n");
+  printf("Opcao: ");
+  scanf("%d", &opcao);
+  system("clear");
+  if (argc == 1) {
+    printf("ERROR! NO FILES TO EXECUTE\n");
+    return 0;
+  }
+  while (argv[file] != NULL && opcao != 2) {
+    system("clear");
+    printf("File: %d \n", file);
     printf("\n");
     FILE *fp;
-    fp = fopen(argv[f], "r");
+    fp = fopen(argv[file], "r");
     if (fp == NULL) {
       printf("FILE ERROR\n");
       return 0;
@@ -141,8 +152,15 @@ int main(int argc, char const *argv[]) {
       }
       lista = lista->tail;
     }
-    ++f;
+    ++file;
     printf("------------------------------\n\n");
+    if (argv[file] != NULL) {
+      printf("[1] CONTINUE\n");
+      printf("[2] QUIT\n");
+      printf("Opcao: ");
+      scanf("%d", &opcao);
+      printf("\n");
+    }
   }
   return 0;
 }
