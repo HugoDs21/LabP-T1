@@ -1,7 +1,6 @@
-# LabP-T1 Interpretador de Linguagem Personalizada
-
 [![Build Status](https://travis-ci.org/xPudimx/LabP-T1.svg?branch=master)](https://travis-ci.org/xPudimx/LabP-T1)
 
+# LabP-T1 Interpretador de Linguagem Personalizada
 
 Instruções aceites:
 
