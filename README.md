@@ -16,14 +16,17 @@ Operações
  - Multiplicação 2 campos: "var = var * var;"
 
 If: "if: var"
+
 Goto: goto: Label
+
 Label: label: Label
+
 Terminar o programa: quit;
 
 
-As variaveis têm que ser minusculas.
-Não é sensivel a espaçamento.
-O programa acaba com uma instrução "quit;" ou quando nao tem mais instruções
+ - As variaveis têm que ser minusculas.
+ - Não é sensivel a espaçamento.
+ - O programa acaba com uma instrução "quit;" ou quando nao tem mais instruções
 
 Exemplo prático:
 
