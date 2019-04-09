@@ -14,6 +14,7 @@ Operações
  - Soma 2 campos: "var = var + var;"
  - Subtração 2 campos: "var = var - var;"
  - Multiplicação 2 campos: "var = var * var;"
+
 If: "if: var"
 Goto: goto: Label
 Label: label: Label
@@ -22,7 +23,7 @@ Terminar o programa: quit;
 
 As variaveis têm que ser minusculas.
 Não é sensivel a espaçamento.
-O programa acaba com uma isntrução "quit;" ou quando nao tem mais instruções
+O programa acaba com uma instrução "quit;" ou quando nao tem mais instruções
 
 Exemplo prático:
 
@@ -40,8 +41,8 @@ quit;
 
 Para compilar o programa deverá aceder ao diretório do mesmo e executar
 
-```$make```
+```$ make```
 
 Para executar
 
-```$./main {files.txt}```
+```$ ./main {files.txt}```
