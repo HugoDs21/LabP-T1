@@ -24,7 +24,7 @@ Label: label: Label
 Terminar o programa: quit;
 
 
- - As variaveis têm que ser minusculas.
+ - As variaveis não são case sensitive.
  - Não é sensivel a espaçamento.
  - O programa acaba com uma instrução "quit;" ou quando nao tem mais instruções
 
