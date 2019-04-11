@@ -31,7 +31,8 @@ int main(int argc, char const *argv[]) {
       printf("FILE ERROR\n");
       return 0;
     }
-    ILIST lista = mkList(mkInstr(START,empty(),empty(),empty(),0, 0),NULL);
+    ILIST listastart = mkList(mkInstr(START,empty(),empty(),empty(),0, 0),NULL);
+    ILIST lista = listastart;
     while ((aux = getline(&buffer, &buffsize, fp)) != -1) {
       removeSpaces(buffer);
       Instr inst = parseInstr(buffer, i);
@@ -75,9 +76,10 @@ int main(int argc, char const *argv[]) {
         }
         break;
         case GOTO:
+        lista = listastart;
         lab = getName(i.first);
-        a1 = getIndex(lab, lista);
-        lista = lista->tail;
+        a1 = getIndex(lab, listastart);
+        //lista = lista->tail;
         g = head(lista);
         while (a1 != g.index) {
           lista = lista->tail;
