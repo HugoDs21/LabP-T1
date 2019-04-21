@@ -49,20 +49,20 @@ ILIST addLast(Instr, ILIST);
 int getIndex(char*, ILIST);
 
 //-----------HASH----------------------
-
-typedef struct List List;
-struct List{
-  char* key;
-  int value;
-  List* next;
-};
-
-List* table[HASH_SIZE];
-
-unsigned int hash(char*);
-List* lookup(char*);
-void insert(char*, int);
-void display();
-void init_table();
-int getHashValue(List*);
-char* getHashKey(List*);
+// 
+// typedef struct List List;
+// struct List{
+//   char* key;
+//   int value;
+//   List* next;
+// };
+//
+// List* table[HASH_SIZE];
+//
+// unsigned int hash(char*);
+// List* lookup(char*);
+// void insert(char*, int);
+// void display();
+// void init_table();
+// int getHashValue(List*);
+// char* getHashKey(List*);
