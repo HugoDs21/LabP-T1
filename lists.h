@@ -1,3 +1,6 @@
+#ifndef __GUARD_LISTS__
+#define __GUARD_LISTS__
+
 #include "structs.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,3 +18,6 @@ void printList(ILIST);
 ILIST append(ILIST, ILIST);
 ILIST addLast(Instr, ILIST);
 int getIndex(char*, ILIST);
+void execlist(ILIST);
+
+#endif

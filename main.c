@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 //./main {files.txt}
 int main(int argc, char const *argv[]) {
@@ -23,7 +24,7 @@ int main(int argc, char const *argv[]) {
     printf("ERROR! NO FILES TO EXECUTE\n");
     return 0;
   }
-  while (argv[file] != NULL && opcao == 1) {
+  while (argv[file] != NULL && opcao != 2) {
     system("clear");
     printf("File: %d \n", file);
     printf("\n");
@@ -46,116 +47,8 @@ int main(int argc, char const *argv[]) {
     printf("Lista: \n");
     printList(lista);
     printf("\n----------Execução------------\n");
-
     //Percorrer Lista
-    while (lista != NULL) {
-      Instr i = head(lista);
-      Instr g;
-      char* lab;
-      List* li;
-      int val, a1, a2;
-      switch(i.op){
-        case START:
-        break;
-        case QUIT:
-        lista->tail = NULL;
-        break;
-        case PRINT:
-        li = lookup(getName(i.first));
-        val = getHashValue(li);
-        printf("%d \n", val);
-        break;
-        case READ:
-        printf("Valor de %s = ", getName(i.first));
-        scanf("%d", &val);
-        insert(getName(i.first), val);
-        break;
-        case IF:
-        li = lookup(getName(i.first));
-        val = getHashValue(li);
-        if (val == 0) {
-          lista = lista->tail;
-        }
-        break;
-        case GOTO:
-        lista = listastart;
-        lab = getName(i.first);
-        a1 = getIndex(lab, listastart);
-        //lista = lista->tail;
-        g = head(lista);
-        while (a1 != g.index) {
-          lista = lista->tail;
-          g = head(lista);
-        }
-        break;
-        case LABEL:
-        break;
-        case ATRIB:
-        insert(getName(i.first), getVal(i.second));
-        break;
-        case ADD:
-        switch (i.type) {
-          case 1:
-          a1 = getHashValue(lookup(getName(i.second)));
-          a2 = getHashValue(lookup(getName(i.third)));
-          insert(getName(i.first), (a1 + a2));
-          break;
-          case 2:
-          insert(getName(i.first), (getVal(i.second) + getVal(i.third)));
-          break;
-          case 3:
-          a1 = getHashValue(lookup(getName(i.second)));
-          insert(getName(i.first), (a1 + getVal(i.third)));
-          break;
-          case 4:
-          a2 = getHashValue(lookup(getName(i.third)));
-          insert(getName(i.first), (a2 + getVal(i.second)));
-          break;
-        }
-        break;
-        case SUB:
-        switch (i.type) {
-          case 1:
-          a1 = getHashValue(lookup(getName(i.second)));
-          a2 = getHashValue(lookup(getName(i.third)));
-          insert(getName(i.first), (a1 - a2));
-          break;
-          case 2:
-          insert(getName(i.first), (getVal(i.second) - getVal(i.third)));
-          break;
-          case 3:
-          a1 = getHashValue(lookup(getName(i.second)));
-          insert(getName(i.first), (a1 - getVal(i.third)));
-          break;
-          case 4:
-          a2 = getHashValue(lookup(getName(i.third)));
-          insert(getName(i.first), (a2 - getVal(i.second)));
-          break;
-        }
-        break;
-        case MUL:
-        switch (i.type) {
-          case 1:
-          a1 = getHashValue(lookup(getName(i.second)));
-          a2 = getHashValue(lookup(getName(i.third)));
-          insert(getName(i.first), (a1 * a2));
-          break;
-          case 2:
-          insert(getName(i.first), (getVal(i.second) * getVal(i.third)));
-          break;
-          case 3:
-          a1 = getHashValue(lookup(getName(i.second)));
-          insert(getName(i.first), (a1 * getVal(i.third)));
-          break;
-          case 4:
-          a2 = getHashValue(lookup(getName(i.third)));
-          insert(getName(i.first), (a2 * getVal(i.second)));
-          break;
-        }
-        break;
-      }
-      lista = lista->tail;
-    }
+    execlist(lista);
     ++file;
     printf("------------------------------\n\n");
     if (argv[file] != NULL) {

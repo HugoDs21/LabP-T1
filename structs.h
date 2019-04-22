@@ -23,6 +23,7 @@ typedef struct{
   int type, index;
 } Instr;
 
+
 Elem mkVar(char*);
 Elem mkInt(int);
 Elem empty();
@@ -31,7 +32,7 @@ int getVal(Elem );
 char* getName(Elem);
 void escrever(Instr);
 void removeSpaces(char*);
+
 Instr parseInstr(char*, int);
 int getType(char*, char*);
-
 #endif

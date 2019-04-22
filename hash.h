@@ -1,3 +1,6 @@
+#ifndef __GUARD_HASH__
+#define __GUARD_HASH__
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,3 +23,5 @@ void display();
 void init_table();
 int getHashValue(List*);
 char* getHashKey(List*);
+
+#endif
