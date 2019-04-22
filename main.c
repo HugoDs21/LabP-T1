@@ -34,8 +34,7 @@ int main(int argc, char const *argv[]) {
       printf("FILE ERROR\n");
       return 0;
     }
-    ILIST listastart = mkList(mkInstr(START,empty(),empty(),empty(),0, 0),NULL);
-    ILIST lista = listastart;
+    ILIST lista = mkList(mkInstr(START,empty(),empty(),empty(),0, 0),NULL);
     while ((aux = getline(&buffer, &buffsize, fp)) != -1) {
       removeSpaces(buffer);
       Instr inst = parseInstr(buffer, i);
@@ -44,10 +43,9 @@ int main(int argc, char const *argv[]) {
     }
 
     fclose(fp);
-    printf("Lista: \n");
+    printf("Lista %d: \n", file);
     printList(lista);
     printf("\n----------Execução------------\n");
-    //Percorrer Lista
     execlist(lista);
     ++file;
     printf("------------------------------\n\n");
