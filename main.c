@@ -1,5 +1,6 @@
 #include "structs.h"
 #include "hash.h"
+#include "lists.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -22,7 +23,7 @@ int main(int argc, char const *argv[]) {
     printf("ERROR! NO FILES TO EXECUTE\n");
     return 0;
   }
-  while (argv[file] != NULL && opcao != 2) {
+  while (argv[file] != NULL && opcao == 1) {
     system("clear");
     printf("File: %d \n", file);
     printf("\n");

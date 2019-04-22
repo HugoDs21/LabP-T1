@@ -1,11 +1,9 @@
 #include "structs.h"
-#include "hash.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 
-//-------------------------Instr--------------------------------------
 Elem mkVar(char* s){
   Elem new;
   new.kind = STRING;
@@ -36,49 +34,6 @@ Instr mkInstr(OpKind oper, Elem x, Elem y, Elem z, int t, int ind){
   new.index = ind;
   return new;
 }
-
-//--------------List-----------------------
-
-ILIST mkList(Instr n, ILIST l1) {
-  ILIST l = malloc(sizeof(struct list));
-  l->head = n;
-  l->tail = l1;
-  return l;
-}
-
-ILIST append(ILIST l1, ILIST l2){
-  ILIST new = l1;
-  if(l1 == NULL) return l2;
-  while (l1->tail != NULL) {
-    l1 = l1->tail;
-  }
-  l1->tail = l2;
-  return new;
-}
-
-ILIST addLast(Instr n, ILIST l1){
-  ILIST l2 = mkList(n,NULL);
-  ILIST new = append(l1,l2);
-  return new;
-}
-
-void printList(ILIST l) {
-  while (l != NULL) {
-    escrever(head(l));
-    l = l->tail;
-  }
-}
-
-//-----------------Getters-------------------------
-
-Instr head(ILIST l) {
-  return l->head;
-}
-
-ILIST tail(ILIST l) {
-  return l->tail;
-}
-
 
 int getVal(Elem x){
   if (x.kind == INT_CONST) {
@@ -140,73 +95,6 @@ int getType(char* str, char* ch){
   }
   return 0;
 }
-
-int getIndex(char* s, ILIST lista){
-  Instr i;
-  while(lista != NULL){
-    i = head(lista);
-    if(i.op == LABEL){
-      if (strcmp(s, getName(i.first)) == 0) {
-        return i.index;
-      }
-    }
-    lista = lista->tail;
-  }
-  return 0;
-}
-
-//-----------Hash Funcs---------------------------
-
-// unsigned int hash(char* str){
-//   unsigned int h;
-//   unsigned char *p;
-//   h = 0;
-//   for(p = (unsigned char*)str; *p != '\0'; p++){
-//     h = MULTIPLIER * h + *p;
-//   }
-//   return h % HASH_SIZE;
-// }
-//
-// void init_table(){
-//   int i = 0;
-//   for(i; i < HASH_SIZE; i++){
-//     table[i] = NULL;
-//   }
-// }
-//
-// void display() {
-//   int i = 0;
-//   for(i = 0; i < HASH_SIZE; i++){
-//     if (table[i] != NULL) {
-//       printf("[%s, %d]\n", table[i]->key, table[i]->value);
-//     }
-//   }
-// }
-//
-// List* lookup(char* s){
-//   int index = hash(s);
-//   while (table[index] != NULL) {
-//     if (table[index]->key) {
-//       return table[index];
-//     }
-//     index ++;
-//     index %= HASH_SIZE;
-//   }
-//   return NULL;
-// }
-//
-// void insert(char* k, int val){
-//   int index;
-//   List* new = (List*)malloc(sizeof(struct List));
-//   index = hash(k);
-//   new->key = k;
-//   new->value = val;
-//   new->next = table[index];
-//   table[index] = new;
-// }
-
-
-//--------------------FUNCS-----------------------------------------------
 
 
 void escrever(Instr inst) {
@@ -297,7 +185,6 @@ void escrever(Instr inst) {
 }
 
 void removeSpaces(char* str){
-  //
   str[strlen(str)-2] = '\0';
   int count = 0;
   int i = 0;
