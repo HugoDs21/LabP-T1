@@ -170,6 +170,9 @@ void escrever(Instr inst) {
     break;
     case START:
     break;
+    case ERROR:
+    printf("ERROR\n");
+    break;
     case QUIT:
     printf("Quit\n");
     break;
@@ -197,7 +200,7 @@ void removeSpaces(char* str){
 
 
 Instr parseInstr(char* s, int index){
-  Instr i;
+  Instr i = mkInstr(ERROR, empty(), empty(), empty(), 0, index);
   //QUIT quit
   if (strstr(s, "quit") != NULL) {
     i = mkInstr(QUIT,empty(),empty(),empty(),0, index);
@@ -249,7 +252,7 @@ Instr parseInstr(char* s, int index){
     return i;
   }
   //ATRIB s = 2;
-  if (strstr(s, "+") == NULL &&
+  if (strstr(s, "=") != NULL && strstr(s, "+") == NULL &&
   strstr(s, "-") == NULL &&
   strstr(s, "*") == NULL &&
   strstr(s, "/") == NULL) {

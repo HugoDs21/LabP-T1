@@ -72,6 +72,10 @@ void execlist(ILIST lista) {
     List* li;
     int val, a1, a2;
     switch(i.op){
+      case ERROR:
+      printf("ERROR\n");
+      lista->tail = NULL;
+      break;
       case START:
       break;
       case QUIT:

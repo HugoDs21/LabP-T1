@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef enum  {START, QUIT, ATRIB, ADD, SUB, MUL, PRINT, READ, IF, GOTO, LABEL} OpKind;
+typedef enum  {START, ERROR, QUIT, ATRIB, ADD, SUB, MUL, PRINT, READ, IF, GOTO, LABEL} OpKind;
 typedef enum {INT_CONST, STRING, EMPTY} ElemKind;
 
 typedef struct{
@@ -32,7 +32,6 @@ int getVal(Elem );
 char* getName(Elem);
 void escrever(Instr);
 void removeSpaces(char*);
-
 Instr parseInstr(char*, int);
 int getType(char*, char*);
 #endif
