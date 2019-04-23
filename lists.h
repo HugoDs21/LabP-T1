@@ -19,5 +19,6 @@ ILIST append(ILIST, ILIST);
 ILIST addLast(Instr, ILIST);
 int getIndex(char*, ILIST);
 void execlist(ILIST);
+ILIST readList(FILE*);
 
 #endif

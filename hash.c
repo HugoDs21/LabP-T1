@@ -4,6 +4,7 @@
 #include <string.h>
 #include <ctype.h>
 
+//GETTERS
 int getHashValue(List* p){
   return p->value;
 }
@@ -12,6 +13,7 @@ char* getHashKey(List* p){
   return p->key;
 }
 
+//HASH FUNC
 unsigned int hash(char* str){
   unsigned int h;
   unsigned char *p;
@@ -21,14 +23,14 @@ unsigned int hash(char* str){
   }
   return h % HASH_SIZE;
 }
-
+//Initialize table
 void init_table(){
   int i = 0;
   for(i; i < HASH_SIZE; i++){
     table[i] = NULL;
   }
 }
-
+//Print Hash table
 void display() {
   int i = 0;
   for(i = 0; i < HASH_SIZE; i++){
@@ -37,7 +39,7 @@ void display() {
     }
   }
 }
-
+//Search
 List* lookup(char* s){
   int index = hash(s);
   while (table[index] != NULL) {
@@ -49,7 +51,7 @@ List* lookup(char* s){
   }
   return NULL;
 }
-
+//Insert
 void insert(char* k, int val){
   int index;
   List* new = (List*)malloc(sizeof(struct List));

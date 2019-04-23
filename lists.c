@@ -5,6 +5,7 @@
 #include <string.h>
 #include <ctype.h>
 
+//Make List
 ILIST mkList(Instr n, ILIST l1) {
   ILIST l = malloc(sizeof(struct list));
   l->head = n;
@@ -12,6 +13,7 @@ ILIST mkList(Instr n, ILIST l1) {
   return l;
 }
 
+//APPEND LISTS
 ILIST append(ILIST l1, ILIST l2){
   ILIST new = l1;
   if(l1 == NULL) return l2;
@@ -22,12 +24,14 @@ ILIST append(ILIST l1, ILIST l2){
   return new;
 }
 
+//ADD IN LAST
 ILIST addLast(Instr n, ILIST l1){
   ILIST l2 = mkList(n,NULL);
   ILIST new = append(l1,l2);
   return new;
 }
 
+//PRINT LIST
 void printList(ILIST l) {
   while (l != NULL) {
     escrever(head(l));
@@ -35,6 +39,7 @@ void printList(ILIST l) {
   }
 }
 
+//GETTERS
 Instr head(ILIST l) {
   return l->head;
 }
@@ -57,6 +62,7 @@ int getIndex(char* s, ILIST lista){
   return 0;
 }
 
+//EXECUTE LIST
 void execlist(ILIST lista) {
   ILIST listastart = lista;
   while (lista != NULL) {
@@ -169,4 +175,20 @@ void execlist(ILIST lista) {
     lista = lista->tail;
   }
 
+}
+
+//READ LIST
+ILIST readList(FILE *fp){
+  char* buffer = NULL;
+  size_t buffsize = 32;
+  int i = 1;
+  ssize_t aux;
+  ILIST lista = mkList(mkInstr(START,empty(),empty(),empty(),0, 0),NULL);
+  while ((aux = getline(&buffer, &buffsize, fp)) != -1) {
+    removeSpaces(buffer);
+    Instr inst = parseInstr(buffer, i);
+    i++;
+    lista = addLast(inst, lista);
+  }
+  return lista;
 }
